@@ -1,13 +1,2 @@
-﻿  glad.c
-  Mat4F.cpp
-C:\Users\atwle\Documents\GitHub\Progetto_Walter_Ester_Pog\Progetto_Walter_Ester_Pog\Mat4F.cpp(5,16): warning C4244: 'argomento': conversione da 'float' a 'int'. Possibile perdita di dati.
-C:\Users\atwle\Documents\GitHub\Progetto_Walter_Ester_Pog\Progetto_Walter_Ester_Pog\Mat4F.cpp(11,16): warning C4244: 'argomento': conversione da 'float' a 'int'. Possibile perdita di dati.
-C:\Users\atwle\Documents\GitHub\Progetto_Walter_Ester_Pog\Progetto_Walter_Ester_Pog\Mat4F.cpp(64,23): warning C4244: 'inizializzazione': conversione da 'double' a 'float'. Possibile perdita di dati.
-C:\Users\atwle\Documents\GitHub\Progetto_Walter_Ester_Pog\Progetto_Walter_Ester_Pog\Mat4F.cpp(64,17): warning C4244: 'inizializzazione': conversione da 'double' a 'const float'. Possibile perdita di dati.
-  Progetto_Walter_Ester_Pog.cpp
-  Quaternion.cpp
-  Vec3F.cpp
-  Vec4F.cpp
-  Generazione del codice in corso...
-LINK : warning LNK4098: la libreria predefinita 'MSVCRT' è in conflitto con l'utilizzo di altre librerie; usare /NODEFAULTLIB:libreria
+﻿  Progetto_Walter_Ester_Pog.cpp
   Progetto_Walter_Ester_Pog.vcxproj -> C:\Users\atwle\Documents\GitHub\Progetto_Walter_Ester_Pog\Progetto_Walter_Ester_Pog\x64\Debug\Progetto_Walter_Ester_Pog.exe

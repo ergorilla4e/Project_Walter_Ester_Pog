@@ -33,7 +33,7 @@ int main()
     // PROVE DI LIBRERIA ALGEBRA LINEARE
 
     // Creazione di un vettore di 4 elementi con valori specifici
-    Vec4F vettore = { 0.8f,0.4f,0.4f,1.0f };
+    Vec4F vettore = { 0.8f,0.2f,0.2f,1.0f };
 
     //----------------------------------
 
@@ -171,6 +171,7 @@ int main()
 
     // glfw: termina, cancellando tutte le risorse GLFW precedentemente allocate.
     // ------------------------------------------------------------------
+
     glfwTerminate();
     return 0;
 }
