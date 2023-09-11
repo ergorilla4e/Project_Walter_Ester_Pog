@@ -33,7 +33,7 @@ int main()
     // PROVE DI LIBRERIA ALGEBRA LINEARE
 
     // Creazione di un vettore di 4 elementi con valori specifici
-    Vec4F vettore = { 0.8f,0.0f,0.4f,1.0f };
+    Vec4F vettore = { 0.8f,0.4f,0.4f,1.0f };
 
     //----------------------------------
 
