@@ -4,7 +4,9 @@
 #include <iostream>
 #include <math.h>
 #include <cmath>
-
+#include <string>
+#include <fstream>
+#include <sstream>
 //#define STB_IMAGE_IMPLEMENTATION
 
 //NAMESPACE
@@ -34,3 +36,6 @@ using namespace std;
 #include <RAPIDXML/rapidxml_print.hpp>
 #include <RAPIDXML/rapidxml_utils.hpp>
 #include "stb_image.h"
+
+//CLASSI AGGIUNTIVE
+#include "Shader_Class.cpp"

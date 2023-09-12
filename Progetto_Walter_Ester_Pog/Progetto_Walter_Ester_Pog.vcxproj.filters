@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="File di risorse\Shaders">
+      <UniqueIdentifier>{9668923d-759b-4d27-a751-22bb28661924}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Progetto_Walter_Ester_Pog.cpp">
@@ -31,6 +34,9 @@
       <Filter>File di origine</Filter>
     </ClCompile>
     <ClCompile Include="Vec4F.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader_Class.cpp">
       <Filter>File di origine</Filter>
     </ClCompile>
   </ItemGroup>
@@ -53,5 +59,13 @@
     <ClInclude Include="stb_image.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="VertexShader.vs">
+      <Filter>File di risorse\Shaders</Filter>
+    </None>
+    <None Include="FragmentShader.fs">
+      <Filter>File di risorse\Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>
