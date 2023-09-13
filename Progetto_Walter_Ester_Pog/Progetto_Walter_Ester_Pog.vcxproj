@@ -135,6 +135,7 @@
     <ClCompile Include="Progetto_Walter_Ester_Pog.cpp" />
     <ClCompile Include="Quaternion.cpp" />
     <ClCompile Include="Shader_Class.cpp" />
+    <ClCompile Include="Texture_Class.cpp" />
     <ClCompile Include="Vec3F.cpp" />
     <ClCompile Include="Vec4F.cpp" />
   </ItemGroup>

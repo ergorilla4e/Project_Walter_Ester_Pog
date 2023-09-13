@@ -12,29 +12,11 @@ void processInput(GLFWwindow* window);
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
-// Sorgenti dei vertex e fragment shader
-// 
-// Con Uniform
-//const char* vertexShaderSource = "#version 330 core\n"
-//"layout (location = 0) in vec3 aPos;\n"
-//"void main()\n"
-//"{\n"
-//"   gl_Position = vec4(aPos, 1.0);\n"
-//"}\0";
-//
-//const char* fragmentShaderSource = "#version 330 core\n"
-//"out vec4 FragColor;\n"
-//"uniform vec4 ourColor;\n" //essendo definita come uniforme si può accedere e modificare il colore da qualsiasi punto del programma e in qualsiasi momento
-//"void main()\n"
-//"{\n"
-//"   FragColor = ourColor;\n"
-//"}\n\0";
-
 
 int main()
 {
     // Apri il file "base.fs" in modalità lettura
-    ifstream theFile("base.fs");
+    //ifstream theFile("base.fs");
 
     // PROVE DI LIBRERIA ALGEBRA LINEARE
 
@@ -73,55 +55,6 @@ int main()
         std::cout << "Errore: Impossibile inizializzare GLAD" << std::endl;
         return -1;
     }
-
-    //// Compila e collega il programma dei nostri shader
-    //// ------------------------------------
-    //// Shader vertex
-    //unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
-    //glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
-    //glCompileShader(vertexShader);
-    //// Verifica gli errori di compilazione dello shader
-    //int success;
-    //char infoLog[512];
-    //glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-    //if (!success)
-    //{
-    //    glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-    //    std::cout << "ERRORE::SHADER::VERTEX::COMPILAZIONE_FALLITA\n" << infoLog << std::endl;
-    //}
-    //// Shader fragment
-    //unsigned int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-    //glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
-    //glCompileShader(fragmentShader);
-    //// Verifica gli errori di compilazione dello shader
-    //glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
-    //if (!success)
-    //{
-    //    glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
-    //    std::cout << "ERRORE::SHADER::FRAGMENT::COMPILAZIONE_FALLITA\n" << infoLog << std::endl;
-    //}
-    //// Collega gli shader
-    //unsigned int shaderProgram = glCreateProgram();
-    //glAttachShader(shaderProgram, vertexShader);
-    //glAttachShader(shaderProgram, fragmentShader);
-    //glLinkProgram(shaderProgram);
-    //// Verifica gli errori di collegamento
-    //glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-    //if (!success) {
-    //    glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
-    //    std::cout << "ERRORE::SHADER::PROGRAMMA::COLLEGAMENTO_FALLITO\n" << infoLog << std::endl;
-    //}
-    //glDeleteShader(vertexShader);
-    //glDeleteShader(fragmentShader);
-
-    // Imposta i dati dei vertici e configura gli attributi dei vertici
-    // ------------------------------------------------------------------
-    //float vertices[] = {
-
-    //    -0.5f, -0.5f, 0.0f, // sinistra  
-    //     0.5f, -0.5f, 0.0f, // destra 
-    //     0.0f,  0.5f, 0.0f  // sopra   
-    //};
    
     Shader_Class shader("VertexShader.vs", "FragmentShader.fs");
 
@@ -176,67 +109,10 @@ int main()
     //Dato che abbiamo un solo shader, potremmo anche attivare il nostro shader un volta in anticipo, se lo dedesideriamo
     //glUseProgram(shaderProgram);
 
-    //Caricamento e creazione texture
-    unsigned int texture1, texture2;
-    // Genera una texture OpenGL vuota
-    glGenTextures(1, &texture1);
-    glBindTexture(GL_TEXTURE_2D, texture1);
-    // Collega questa texture come bersaglio corrente per le prossime operazioni GL_TEXTURE_2D
-    // Tutte le operazioni GL_TEXTURE_2D future avranno effetto su questa texture
-    // Imposta i parametri di avvolgimento della texture
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);  // Imposta l'avvolgimento della texture su GL_REPEAT (metodo di avvolgimento predefinito)
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    // Imposta i parametri di filtraggio della texture
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    // Carica l'immagine, crea la texture e genera i mipmaps
-    int width, height, nrChannels;
-    // La funzione FileSystem::getPath(...) fa parte del repository GitHub in modo da poter trovare file su qualsiasi IDE/piattaforma; sostituiscila con il percorso del tuo file immagine.
-    unsigned char* data = stbi_load("container.jpg", &width, &height, &nrChannels, 0);
-    if (data)
-    {
-        // Specifica i dati dell'immagine come texture OpenGL
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-        // Genera i mipmaps per la texture
-        glGenerateMipmap(GL_TEXTURE_2D);
-    }
-    else
-    {
-       
-        cout << "Impossibile caricare la texture" << endl;
-    }
-    // Libera la memoria allocata per i dati dell'immagine
-    stbi_image_free(data);
-
-    glGenTextures(1, &texture2);
-    glBindTexture(GL_TEXTURE_2D, texture2);
-    // Collega questa texture come bersaglio corrente per le prossime operazioni GL_TEXTURE_2D
-    // Tutte le operazioni GL_TEXTURE_2D future avranno effetto su questa texture
-    // Imposta i parametri di avvolgimento della texture
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);  // Imposta l'avvolgimento della texture su GL_REPEAT (metodo di avvolgimento predefinito)
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    // Imposta i parametri di filtraggio della texture
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    stbi_set_flip_vertically_on_load(true);
-
-    // Carica l'immagine, crea la texture e genera i mipmaps
-    // La funzione FileSystem::getPath(...) fa parte del repository GitHub in modo da poter trovare file su qualsiasi IDE/piattaforma; sostituiscila con il percorso del tuo file immagine.
-    data = stbi_load("awesomeface.png", &width, &height, &nrChannels, 0);
-    if (data)
-    {
-        // Specifica i dati dell'immagine come texture OpenGL
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-        // Genera i mipmaps per la texture
-        glGenerateMipmap(GL_TEXTURE_2D);
-    }
-    else
-    {
-
-        cout << "Impossibile caricare la texture" << endl;
-    }
-    // Libera la memoria allocata per i dati dell'immagine
-    stbi_image_free(data);
+    unsigned int texture1,texture2;
+    Texture_Class textureClass(1);
+    textureClass.calcoloTexture("container.jpg",false, true, GL_REPEAT, GL_LINEAR, &texture1);
+    textureClass.calcoloTexture("awesomeface.png",true, false, GL_REPEAT, GL_LINEAR, &texture2);
 
     shader.use();
     glUniform1i(glGetUniformLocation(shader.ID, "texture1"), 0);

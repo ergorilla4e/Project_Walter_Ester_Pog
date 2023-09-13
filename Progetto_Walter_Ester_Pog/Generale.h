@@ -40,3 +40,4 @@ using namespace std;
 
 //CLASSI AGGIUNTIVE
 #include "Shader_Class.cpp"
+#include "Texture_Class.cpp"
