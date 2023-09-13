@@ -7,7 +7,7 @@
 #include <string>
 #include <fstream>
 #include <sstream>
-//#define STB_IMAGE_IMPLEMENTATION
+
 
 //NAMESPACE
 using namespace std;
@@ -35,6 +35,7 @@ using namespace std;
 #include <RAPIDXML/rapidxml_iterators.hpp>
 #include <RAPIDXML/rapidxml_print.hpp>
 #include <RAPIDXML/rapidxml_utils.hpp>
+
 #include "stb_image.h"
 
 //CLASSI AGGIUNTIVE

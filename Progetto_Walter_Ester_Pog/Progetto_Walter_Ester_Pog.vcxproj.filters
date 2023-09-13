@@ -16,6 +16,9 @@
     <Filter Include="File di risorse\Shaders">
       <UniqueIdentifier>{9668923d-759b-4d27-a751-22bb28661924}</UniqueIdentifier>
     </Filter>
+    <Filter Include="File di risorse\Textures">
+      <UniqueIdentifier>{12fd2d77-8980-4bba-9acb-c44faf3ec8ba}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Progetto_Walter_Ester_Pog.cpp">
@@ -67,5 +70,13 @@
     <None Include="FragmentShader.fs">
       <Filter>File di risorse\Shaders</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="container.jpg">
+      <Filter>File di risorse\Textures</Filter>
+    </Image>
+    <Image Include="awesomeface.png">
+      <Filter>File di risorse\Textures</Filter>
+    </Image>
   </ItemGroup>
 </Project>
