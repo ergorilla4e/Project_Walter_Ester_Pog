@@ -295,12 +295,12 @@ Mat4F Mat4F::viewMat4F(const Vec3F& eye, const Vec3F& lookAt, const Vec3F& up)
 
 Mat4F Mat4F::projectionMat4F(const float& angleOfView, const float& near, const float& far, Mat4F& M)
 {
-	float S = 1 / tan(angleOfView * 0.5 * M_PI / 180);
+	float S = 1 / tan((angleOfView / 2) * (M_PI / 180));
 
 	return Mat4F::Mat4F(S,0,0,0,
 						0,S,0,0,
-						0,0,-far / (far-near), -1,
-						0,0,(- far * near) / (far - near), 0);
+						0,0,- (far / (far-near)), -1,
+						0,0,- (far * near) / (far - near), 0);
 }
 
 

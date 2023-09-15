@@ -54,41 +54,94 @@ int main()
         std::cout << "Errore: Impossibile inizializzare GLAD" << std::endl;
         return -1;
     }
-   
+
     Shader_Class shader("VertexShader.vs", "FragmentShader.fs");
 
+    glEnable(GL_DEPTH_TEST);
+
     float vertices[] = {
-        // positions          // colors           // texture coords
-         0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f, // top right
-         0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f, // bottom right
-        -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f, // bottom left
-        -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f  // top left 
+    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+     0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+    -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+
+    -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+    -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+    -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+     0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+     0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+     0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+     0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
+     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+
+    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+    -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
+    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
     };
-    unsigned int indices[] = {
-        0,1,3, //first triangle
-        1,2,3, //second triangle
+
+    Vec3F cubePositions[] = {
+    Vec3F(0.0f,  0.0f,  0.0f),
+    Vec3F(2.0f,  5.0f, -15.0f),
+    Vec3F(-1.5f, -2.2f, -2.5f),
+    Vec3F(-3.8f, -2.0f, -12.3f),
+    Vec3F(2.4f, -0.4f, -3.5f),
+    Vec3F(-1.7f,  3.0f, -7.5f),
+    Vec3F(1.3f, -2.0f, -2.5f),
+    Vec3F(1.5f,  2.0f, -2.5f),
+    Vec3F(1.5f,  0.2f, -1.5f),
+    Vec3F(-1.3f,  1.0f, -1.5f)
     };
-    unsigned int VBO, VAO,EBO;
+
+    //unsigned int indices[] = {
+    //    0,1,3, //first triangle
+    //    1,2,3, //second triangle
+    //};
+    unsigned int VBO, VAO;//EBO;
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
-    glGenBuffers(1, &EBO);
+   // glGenBuffers(1, &EBO);
     // Collega prima il Vertex Array Object (VAO), poi collega e imposta il buffer dei vertici e infine configura gli attributi dei vertici.
     glBindVertexArray(VAO);
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+    //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    //glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
     // Attributi posizione
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
 
     // Attributi colori
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8* sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
+    //glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8* sizeof(float), (void*)(3 * sizeof(float)));
+   // glEnableVertexAttribArray(1);
+   // 
     //Attributi coordinate texture
-    glVertexAttribPointer(2, 2,  GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+    glVertexAttribPointer(2, 2,  GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(2);
 
     // E' possibile separare il VAO in seguito in modo che altre chiamate VAO non modifichino accidentalmente questo VAO, ma ciò accade raramente. Modifica altro
@@ -117,10 +170,6 @@ int main()
     shader.setInt("texture1", 0);
     shader.setInt("texture2", 1);
 
-    Mat4F prov = Mat4F(1.0f);
-
-    cout << prov(0,0) << endl;
-
     glBindVertexArray(VAO);
 
     // Ciclo di rendering
@@ -134,7 +183,8 @@ int main()
         // Rendering
         // ------
         glClearColor(vettore.x, vettore.y, vettore.z, vettore.w);
-        glClear(GL_COLOR_BUFFER_BIT);
+       // glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         //// Disegna il nostro primo triangolo
         //glUseProgram(shaderProgram);
@@ -159,22 +209,48 @@ int main()
         Mat4F view = Mat4F(1.0f); 
         Mat4F projection = Mat4F(1.0f);
 
-        model = model.rotationX(model,-55.0f);
-        view = view.translation(model,0.0f, -1.0f, 0.3f);
-        projection = projection.projectionMat4F(40.0f, (float)SCR_WIDTH / (float)SCR_HEIGHT , 1.f, projection);
+        //model = model.rotationX(model, (float)glfwGetTime() * -55.0f);
+        //model = model.rotationY(model, (float)glfwGetTime() * -55.0f);
+        //model = model.rotationZ(model, (float)glfwGetTime() * -55.0f);
 
-        unsigned int modelLoc = glGetUniformLocation(shader.ID,"model");
-        unsigned int viewLoc = glGetUniformLocation(shader.ID, "view");
+        //Matrice che gestisce la posizione del piano di vista rispetto al resto in scena
+        view = view.translation(view,0.0f, 0.0f, -3.0f);
 
+        //Matrice che gestisce la prospettiva, gestisce il frustum di camera proiettando i vertici nei pixel su schermo
+        projection = projection.projectionMat4F(45.0f, (float)SCR_WIDTH / (float)SCR_HEIGHT , 400.f, projection);
 
-        const GLfloat* modelPtr = reinterpret_cast<const GLfloat*>(model.mat4f);
-        glUniformMatrix4fv(modelLoc,1,GL_FALSE,modelPtr);
-        glUniformMatrix4fv(viewLoc, 1, GL_FALSE, &view.mat4f[0]);
+        //unsigned int modelLoc = glGetUniformLocation(shader.ID,"model");
+        //unsigned int viewLoc = glGetUniformLocation(shader.ID, "view");
+        //unsigned int projLoc = glGetUniformLocation(shader.ID, "projection");
+
+        //glUniformMatrix4fv(modelLoc,1,GL_FALSE,&model.mat4f[0]);
+        //glUniformMatrix4fv(viewLoc, 1, GL_FALSE, &view.mat4f[0]);
+        //glUniformMatrix4fv(projLoc, 1, GL_FALSE, &projection.mat4f[0]);
 
         shader.setMat4("projection", projection);
+        shader.setMat4("view", view);
 
+        glBindVertexArray(VAO);
 
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT,0);
+        //Aggiorna la model matrix 10 volte, una per ogni cubo e ne disegna uno per volta su schermo
+        for (unsigned int i = 0; i < 10; i++)
+        {
+            // calculate the model matrix for each object and pass it to shader before drawing
+            Mat4F model = Mat4F(1.0f);
+            model = model.translation(model, cubePositions[i].x , cubePositions[i].y , cubePositions[i].z);
+
+            model = model.rotationX(model, (float)glfwGetTime() * 20.0f);
+            model = model.rotationY(model, (float)glfwGetTime() * 20.0f);
+            model = model.rotationZ(model, (float)glfwGetTime() * 20.0f);
+
+            shader.setMat4("model", model);
+
+            glDrawArrays(GL_TRIANGLES, 0, 36);
+        }
+
+        //glBindVertexArray(VAO);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+        //glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT,0);
         
         // glBindVertexArray(0); // non c'è bisogno di scollegarlo ogni volta
 
@@ -189,7 +265,7 @@ int main()
     // ------------------------------------------------------------------------
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &VBO);
-    glDeleteBuffers(1, &EBO);
+    //glDeleteBuffers(1, &EBO);
 
     //glDeleteProgram(shaderProgram);
 
