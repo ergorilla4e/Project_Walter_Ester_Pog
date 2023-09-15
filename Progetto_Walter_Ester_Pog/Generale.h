@@ -1,5 +1,8 @@
 #pragma once
 
+//DEFINIZIONI
+#define _USE_MATH_DEFINES
+
 //AVVIO
 #include <iostream>
 #include <math.h>

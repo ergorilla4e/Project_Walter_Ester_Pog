@@ -9,102 +9,123 @@ class Shader_Class
 {
 public:
     unsigned int ID;
-    //Il costruttore genera lo shader
-    //Il costruttore richiede i percorsi sia dei fali di codice sorgente del vertex shader che del fragment shader, che si possono archiviare su disco come semplici file di testo.
+    // constructor generates the shader on the fly
+    // ------------------------------------------------------------------------
     Shader_Class(const char* vertexPath, const char* fragmentPath)
     {
-        //1.Recupera il codice sorgente del vertex/fregment dal percorso del file
-        string vertexCode;                                                          //Leggo il contenuto dei file come string
-        string fragmentCode;
-        ifstream vShaderFile;
-        ifstream fShaderFile;
-
-        //Assicura che gli oggetti ifstream possanp generare eccezioni:
-        vShaderFile.exceptions(ifstream::failbit | ifstream::badbit);
-        fShaderFile.exceptions(ifstream::failbit | ifstream::badbit);
-
+        // 1. retrieve the vertex/fragment source code from filePath
+        std::string vertexCode;
+        std::string fragmentCode;
+        std::ifstream vShaderFile;
+        std::ifstream fShaderFile;
+        // ensure ifstream objects can throw exceptions:
+        vShaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+        fShaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
         try
         {
-            //Apre il file
+            // open files
             vShaderFile.open(vertexPath);
             fShaderFile.open(fragmentPath);
-            stringstream vShaderStream, fShaderStream;
-            //Legge il contenuto del buffer del file nello stream
+            std::stringstream vShaderStream, fShaderStream;
+            // read file's buffer contents into streams
             vShaderStream << vShaderFile.rdbuf();
             fShaderStream << fShaderFile.rdbuf();
-            // Chiude gli handler dei file
+            // close file handlers
             vShaderFile.close();
             fShaderFile.close();
-            // Converte le stream in stringhe
+            // convert stream into string
             vertexCode = vShaderStream.str();
             fragmentCode = fShaderStream.str();
-
         }
-        catch (ifstream::failure& e)
+        catch (std::ifstream::failure& e)
         {
-            cout << "ERRORE::SHADER::LETTURA_FILE_NON_RIUSCITA: " << e.what() << endl;
+            std::cout << "ERROR::SHADER::FILE_NOT_SUCCESSFULLY_READ: " << e.what() << std::endl;
         }
         const char* vShaderCode = vertexCode.c_str();
         const char* fShaderCode = fragmentCode.c_str();
-        // 2. Compila gli shader
+        // 2. compile shaders
         unsigned int vertex, fragment;
-        // Vertex shader
+        // vertex shader
         vertex = glCreateShader(GL_VERTEX_SHADER);
         glShaderSource(vertex, 1, &vShaderCode, NULL);
         glCompileShader(vertex);
         checkCompileErrors(vertex, "VERTEX");
-        // Fragment Shader
+        // fragment Shader
         fragment = glCreateShader(GL_FRAGMENT_SHADER);
         glShaderSource(fragment, 1, &fShaderCode, NULL);
         glCompileShader(fragment);
         checkCompileErrors(fragment, "FRAGMENT");
-        // Programma dello shader
+        // shader Program
         ID = glCreateProgram();
         glAttachShader(ID, vertex);
         glAttachShader(ID, fragment);
         glLinkProgram(ID);
         checkCompileErrors(ID, "PROGRAM");
-        // Cancella gli shader poiché sono stati collegati nel nostro programma e non sono più necessari
+        // delete the shaders as they're linked into our program now and no longer necessary
         glDeleteShader(vertex);
         glDeleteShader(fragment);
+
     }
-    // Attiva lo shader
+    // activate the shader
     // ------------------------------------------------------------------------
-    void use()
+    void use() const
     {
         glUseProgram(ID);
     }
-    // Funzioni uniformi di utilità
+    // utility uniform functions
     // ------------------------------------------------------------------------
-    void setBool(const string& name, bool value) const
+    void setBool(const std::string& name, bool value) const
     {
         glUniform1i(glGetUniformLocation(ID, name.c_str()), (int)value);
     }
     // ------------------------------------------------------------------------
-    void setInt(const string& name, int value) const
+    void setInt(const std::string& name, int value) const
     {
         glUniform1i(glGetUniformLocation(ID, name.c_str()), value);
     }
     // ------------------------------------------------------------------------
-    void setFloat(const string& name, float value) const
+    void setFloat(const std::string& name, float value) const
     {
         glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
     }
+    // ------------------------------------------------------------------------
+    void setVec3(const std::string& name, const Vec3F& value) const
+    {
+        glUniform3fv(glGetUniformLocation(ID, name.c_str()), 1, &value.x);
+    }
+    void setVec3(const std::string& name, float x, float y, float z) const
+    {
+        glUniform3f(glGetUniformLocation(ID, name.c_str()), x, y, z);
+    }
+    // ------------------------------------------------------------------------
+    void setVec4(const std::string& name, const Vec4F& value) const
+    {
+        glUniform4fv(glGetUniformLocation(ID, name.c_str()), 1, &value.x);
+    }
+    void setVec4(const std::string& name, float x, float y, float z, float w) const
+    {
+        glUniform4f(glGetUniformLocation(ID, name.c_str()), x, y, z, w);
+    }
+    // ------------------------------------------------------------------------
+    void setMat4(const std::string& name, const Mat4F& mat) const
+    {
+        glUniformMatrix4fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, &mat.mat4f[0]);
+    }
 
 private:
-    // Funzione di utilità per verificare errori di compilazione/collegamento degli shader.
+    // utility function for checking shader compilation/linking errors.
     // ------------------------------------------------------------------------
-    void checkCompileErrors(unsigned int shader, string type)
+    void checkCompileErrors(GLuint shader, std::string type)
     {
-        int success;
-        char infoLog[1024];
+        GLint success;
+        GLchar infoLog[1024];
         if (type != "PROGRAM")
         {
             glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
             if (!success)
             {
                 glGetShaderInfoLog(shader, 1024, NULL, infoLog);
-                cout << "ERRORE::ERRORE_DI_COMPILAZIONE_DEGLI_SHADER di tipo: " << type << "\n" << infoLog << "\n -- --------------------------------------------------- -- " << endl;
+                std::cout << "ERROR::SHADER_COMPILATION_ERROR of type: " << type << "\n" << infoLog << "\n -- --------------------------------------------------- -- " << std::endl;
             }
         }
         else
@@ -113,7 +134,7 @@ private:
             if (!success)
             {
                 glGetProgramInfoLog(shader, 1024, NULL, infoLog);
-                cout << "ERRORE::ERRORE_DI_COLLEGAMENTO_DEL_PROGRAMMA di tipo: " << type << "\n" << infoLog << "\n -- --------------------------------------------------- -- " << endl;
+                std::cout << "ERROR::PROGRAM_LINKING_ERROR of type: " << type << "\n" << infoLog << "\n -- --------------------------------------------------- -- " << std::endl;
             }
         }
     }

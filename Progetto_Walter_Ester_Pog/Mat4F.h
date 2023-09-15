@@ -31,13 +31,14 @@ public:
 	Vec4F col(int)const;						//Ritrona la j-esima colonna
 	Mat4F transpose(const Mat4F&);				//Traspone la matrice
 	Mat4F inverse(const Mat4F&);				//Inverte la matrice
-	Mat4F translation(float, float, float);		//Trasla la matrice
-	Mat4F scaling(float);						//Scala la matrice
-	Mat4F rotationX(float);						//Ruota il piano Y.Z con X fisso
-	Mat4F rotationY(float);						//Ruota il piano X.Z con Y fisso
-	Mat4F rotationZ(float);						//Ruota il piano X.Y con Z fisso
+	Mat4F translation(Mat4F, float, float, float);	//Trasla la matrice
+	Mat4F scaling(Mat4F,float);						//Scala la matrice
+	Mat4F rotationX(Mat4F,float);					//Ruota il piano Y.Z con X fisso
+	Mat4F rotationY(Mat4F,float);					//Ruota il piano X.Z con Y fisso
+	Mat4F rotationZ(Mat4F,float);					//Ruota il piano X.Y con Z fisso
 
-
+	Mat4F viewMat4F(const Vec3F&,const Vec3F&,const Vec3F&);											  //Matrice di passaggio da world space a view space
+	Mat4F projectionMat4F(const float&, const float&, const float&, Mat4F&); //Matrice per passaggio da view space a clip space
 };
 
 ostream& operator<<(ostream&, const Mat4F&);	//Stampa in sequenza Mat4F

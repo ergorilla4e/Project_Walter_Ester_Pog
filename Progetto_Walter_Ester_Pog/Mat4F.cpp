@@ -61,9 +61,7 @@ Mat4F::~Mat4F()
 //Passa da gradi a radianti (Metterla su un file.h per operazioni matematiche)
 float toRad(float deg)
 {
-	const float pi = 2.f * acos(-1.0);
-
-	return deg * pi / 180.0f;
+	return deg * M_PI / 180.0f;
 }
 
 Mat4F Mat4F::operator*(const Mat4F& otherMat4f)const
@@ -209,51 +207,102 @@ Mat4F Mat4F::inverse(const Mat4F& otherMat4f) //Utiliziamo il metodo di inversio
 		, a[28], a[29], a[30], a[31]);
 }
 
-Mat4F Mat4F::translation(float a, float b, float c)
+Mat4F Mat4F::translation(Mat4F m, float a, float b, float c)
 {
-	return Mat4F(1.f, 0.f, 0.f, a
-		, 0.f, 1.f, 0.f, b
-		, 0.f, 0.f, 1.f, c
-		, 0.f, 0.f, 0.f, 1.f);
+
+	Mat4F trasl = Mat4F(1,0,0,a,
+						0,1,0,b,
+						0,0,1,c,
+						0,0,0,1);
+
+	Mat4F calc = m * trasl;
+
+	return calc;
 }
 
-Mat4F Mat4F::scaling(float scale)
+Mat4F Mat4F::scaling(Mat4F m, float scale)
 {
-	return Mat4F(scale, 0.f, 0.f, 0.f
-		, 0.f, scale, 0.f, 0.f
-		, 0.f, 0.f, scale, 0.f
-		, 0.f, 0.f, 0.f, 1.f);
+	Mat4F scal = Mat4F(scale, 0, 0, 0,
+						0, scale, 0, 0,
+						0, 0, scale, 0,
+						0, 0, 0, 1);
+
+	Mat4F calc = m * scal;
+
+	return calc;
 }
 
-Mat4F Mat4F::rotationX(float deg)
+Mat4F Mat4F::rotationX(Mat4F m, float deg)
 {
 	float sinT = sin(toRad(deg));
 	float cosT = cos(toRad(deg));
-	return Mat4F(1.f, 0.f, 0.f, 0.f
-		, 0.f, cosT, -sinT, 0.f
-		, 0.f, sinT, cosT, 0.f
-		, 0.f, 0.f, 0.f, 1.f);
+
+	Mat4F rotX = Mat4F(1.f, 0.f, 0.f, 0.f
+					, 0.f, cosT, -sinT, 0.f
+					, 0.f, sinT, cosT, 0.f
+					, 0.f, 0.f, 0.f, 1.f);
+
+	Mat4F calc = m * rotX;
+
+	return calc;
 }
 
-Mat4F Mat4F::rotationY(float deg)
+Mat4F Mat4F::rotationY(Mat4F m,float deg)
 {
 	float sinT = sin(toRad(deg));
 	float cosT = cos(toRad(deg));
-	return Mat4F(cosT, 0.f, sinT, 0.f
-		, 0.f, 1.f, 0.f, 0.f
-		, -sinT, 0.f, cosT, 0.f
-		, 0.f, 0.f, 0.f, 1.f);
+
+	Mat4F rotY = Mat4F(cosT, 0.f, -sinT, 0.f
+					, 0.f, 1.f, 0.f, 0.f
+					, sinT, 0.f, cosT, 0.f
+					, 0.f, 0.f, 0.f, 1.f);
+
+	Mat4F calc = m * rotY;
+
+	return calc;
 }
 
-Mat4F Mat4F::rotationZ(float deg)
+Mat4F Mat4F::rotationZ(Mat4F m,float deg)
 {
 	float sinT = sin(toRad(deg));
 	float cosT = cos(toRad(deg));
-	return Mat4F(cosT, -sinT, 0.f, 0.f
-		, cosT, sinT, 0.f, 0.f
-		, 0.f, 0.f, 1.f, 0.f
-		, 0.f, 0.f, 0.f, 1.f);
+
+	Mat4F rotZ = Mat4F(cosT, -sinT, 0.f, 0.f
+					, sinT, cosT, 0.f, 0.f
+					, 0.f, 0.f,1.f, 0.f
+					, 0.f, 0.f, 0.f, 1.f);
+
+	Mat4F calc = m * rotZ;
+
+	return calc;
 }
+
+Mat4F Mat4F::viewMat4F(const Vec3F& eye, const Vec3F& lookAt, const Vec3F& up)
+{
+	Vec3F _z = (eye - lookAt);
+	_z.normalize();
+	Vec3F _x = up^_z;
+	_x.normalize();
+	Vec3F _y = _z^_x;
+	_y.normalize();
+
+	return Mat4F(
+		_x.x, _x.y, _x.z, -(eye.x * _x.x + eye.y * _x.y + eye.z * _x.z),
+		_y.x, _y.y, _y.z, -(eye.x * _y.x + eye.y * _y.y + eye.z * _y.z),
+		_z.x, _z.y, _z.z, -(eye.x * _z.x + eye.y * _z.y + eye.z * _z.z),
+		0.0f, 0.0f, 0.0f, 1.0f);
+}
+
+Mat4F Mat4F::projectionMat4F(const float& angleOfView, const float& near, const float& far, Mat4F& M)
+{
+	float S = 1 / tan(angleOfView * 0.5 * M_PI / 180);
+
+	return Mat4F::Mat4F(S,0,0,0,
+						0,S,0,0,
+						0,0,-far / (far-near), -1,
+						0,0,(- far * near) / (far - near), 0);
+}
+
 
 ostream& operator<<(ostream& output, const Mat4F& mat4f)
 {

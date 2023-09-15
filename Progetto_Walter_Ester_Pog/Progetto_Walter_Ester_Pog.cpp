@@ -1,5 +1,4 @@
 #define STB_IMAGE_IMPLEMENTATION
-
 #include "Generale.h"
 
 using namespace std;
@@ -115,8 +114,12 @@ int main()
     textureClass.calcoloTexture("awesomeface.png",true, false, GL_REPEAT, GL_LINEAR, &texture2);
 
     shader.use();
-    glUniform1i(glGetUniformLocation(shader.ID, "texture1"), 0);
+    shader.setInt("texture1", 0);
     shader.setInt("texture2", 1);
+
+    Mat4F prov = Mat4F(1.0f);
+
+    cout << prov(0,0) << endl;
 
     glBindVertexArray(VAO);
 
@@ -151,7 +154,25 @@ int main()
 
         //Rendering texture
         shader.use();
-        
+
+        Mat4F model = Mat4F(1.0f);
+        Mat4F view = Mat4F(1.0f); 
+        Mat4F projection = Mat4F(1.0f);
+
+        model = model.rotationX(model,-55.0f);
+        view = view.translation(model,0.0f, -1.0f, 0.3f);
+        projection = projection.projectionMat4F(40.0f, (float)SCR_WIDTH / (float)SCR_HEIGHT , 1.f, projection);
+
+        unsigned int modelLoc = glGetUniformLocation(shader.ID,"model");
+        unsigned int viewLoc = glGetUniformLocation(shader.ID, "view");
+
+
+        const GLfloat* modelPtr = reinterpret_cast<const GLfloat*>(model.mat4f);
+        glUniformMatrix4fv(modelLoc,1,GL_FALSE,modelPtr);
+        glUniformMatrix4fv(viewLoc, 1, GL_FALSE, &view.mat4f[0]);
+
+        shader.setMat4("projection", projection);
+
 
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT,0);
         
