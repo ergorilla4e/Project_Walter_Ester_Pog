@@ -45,6 +45,9 @@
     <ClCompile Include="Texture_Class.cpp">
       <Filter>File di origine</Filter>
     </ClCompile>
+    <ClCompile Include="Camera_Class.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Generale.h">

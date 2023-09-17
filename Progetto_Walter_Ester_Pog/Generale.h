@@ -44,3 +44,4 @@ using namespace std;
 //CLASSI AGGIUNTIVE
 #include "Shader_Class.cpp"
 #include "Texture_Class.cpp"
+#include "Camera_Class.cpp"

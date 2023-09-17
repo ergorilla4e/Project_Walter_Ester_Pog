@@ -130,6 +130,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Camera_Class.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="Mat4F.cpp" />
     <ClCompile Include="Progetto_Walter_Ester_Pog.cpp" />

@@ -5,12 +5,22 @@ using namespace std;
 using namespace rapidxml;
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+void mouse_callback(GLFWwindow* window, double xpos, double ypos);
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void processInput(GLFWwindow* window);
 
 // Impostazioni
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
+// camera
+Camera_Class camera(Vec3F(0.0f, 0.0f, 3.0f));
+float lastX = SCR_WIDTH / 2.0f;
+float lastY = SCR_HEIGHT / 2.0f;
+bool firstMouse = true;
+
+float deltaTime = 0.0f;	// Time between current frame and last frame
+float lastFrame = 0.0f; // Time of last frame
 
 int main()
 {
@@ -46,6 +56,11 @@ int main()
     }
     glfwMakeContextCurrent(window);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+    glfwSetCursorPosCallback(window, mouse_callback);
+    glfwSetScrollCallback(window, scroll_callback);
+
+    // tell GLFW to capture our mouse
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     // Carica tutte le funzioni di OpenGL tramite glad
     // ---------------------------------------
@@ -116,6 +131,20 @@ int main()
     Vec3F(-1.3f,  1.0f, -1.5f)
     };
 
+
+    /*Vec3F cameraPos = Vec3F(0.0f,0.0f,3.0f);
+    Vec3F cameraTarget = Vec3F(0.0f, 0.0f, 0.0f);
+
+    Vec3F cameraDirection = (cameraPos - cameraTarget).normalize();
+    
+    Vec3F up = Vec3F(0.0f, 1.0f, 0.0f);
+    Vec3F cameraRight = (up ^ cameraDirection).normalize();
+    Vec3F cameraUp = (cameraDirection ^ cameraRight);
+
+    Mat4F lookAt = Mat4F();
+    lookAt.lookat(cameraPos, cameraTarget, up, lookAt);*/
+
+
     //unsigned int indices[] = {
     //    0,1,3, //first triangle
     //    1,2,3, //second triangle
@@ -176,6 +205,11 @@ int main()
     // -----------
     while (!glfwWindowShouldClose(window))
     {
+        // Per farlo girare alla stessa velocità su ogni pc
+        float currentFrame = glfwGetTime();
+        deltaTime = currentFrame - lastFrame;
+        lastFrame = currentFrame;
+
         // Input
         // -----
         processInput(window);
@@ -205,19 +239,22 @@ int main()
         //Rendering texture
         shader.use();
 
-        Mat4F model = Mat4F(1.0f);
-        Mat4F view = Mat4F(1.0f); 
         Mat4F projection = Mat4F(1.0f);
+        projection = projection.projectionMat4F(camera.Zoom, (float)SCR_WIDTH / (float)SCR_HEIGHT, 10.f);
+        shader.setMat4("projection", projection);
+
+        Mat4F view = camera.GetMatriceVisualizzazione();
+        view = view.transpose(view);
+        shader.setMat4("view", view);
 
         //model = model.rotationX(model, (float)glfwGetTime() * -55.0f);
         //model = model.rotationY(model, (float)glfwGetTime() * -55.0f);
         //model = model.rotationZ(model, (float)glfwGetTime() * -55.0f);
 
         //Matrice che gestisce la posizione del piano di vista rispetto al resto in scena
-        view = view.translation(view,0.0f, 0.0f, -3.0f);
-
+        //view = view.translation(view,0.0f, 0.0f, -3.0f);
+        
         //Matrice che gestisce la prospettiva, gestisce il frustum di camera proiettando i vertici nei pixel su schermo
-        projection = projection.projectionMat4F(45.0f, (float)SCR_WIDTH / (float)SCR_HEIGHT , 400.f, projection);
 
         //unsigned int modelLoc = glGetUniformLocation(shader.ID,"model");
         //unsigned int viewLoc = glGetUniformLocation(shader.ID, "view");
@@ -227,10 +264,11 @@ int main()
         //glUniformMatrix4fv(viewLoc, 1, GL_FALSE, &view.mat4f[0]);
         //glUniformMatrix4fv(projLoc, 1, GL_FALSE, &projection.mat4f[0]);
 
-        shader.setMat4("projection", projection);
-        shader.setMat4("view", view);
+        //shader.setMat4("view", view);
 
         glBindVertexArray(VAO);
+
+      
 
         //Aggiorna la model matrix 10 volte, una per ogni cubo e ne disegna uno per volta su schermo
         for (unsigned int i = 0; i < 10; i++)
@@ -282,6 +320,15 @@ void processInput(GLFWwindow* window)
 {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
+
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+        camera.ProcessKeyboard(AVANTI, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+        camera.ProcessKeyboard(INDIETRO, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+        camera.ProcessKeyboard(SINISTRA, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+        camera.ProcessKeyboard(DESTRA, deltaTime);
 }
 
 // glfw: ogni volta che la dimensione della finestra cambia (per resize dell'OS o dell'utente), questa funzione di callback viene eseguita
@@ -290,4 +337,30 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
     // Assicura che il viewport corrisponda alle nuove dimensioni della finestra; nota che width e height saranno significativamente più grandi rispetto a quanto specificato su display retina.
     glViewport(0, 0, width, height);
+}
+
+void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
+{
+    float xpos = static_cast<float>(xposIn);
+    float ypos = static_cast<float>(yposIn);
+
+    if (firstMouse)
+    {
+        lastX = xpos;
+        lastY = ypos;
+        firstMouse = false;
+    }
+
+    float xoffset = xpos - lastX;
+    float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
+
+    lastX = xpos;
+    lastY = ypos;
+
+    camera.ProcessMouseMovement(xoffset, yoffset);
+}
+
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
+{
+    camera.ProcessMouseScroll(static_cast<float>(yoffset));
 }

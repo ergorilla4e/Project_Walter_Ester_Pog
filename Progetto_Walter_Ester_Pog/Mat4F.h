@@ -38,7 +38,9 @@ public:
 	Mat4F rotationZ(Mat4F,float);					//Ruota il piano X.Y con Z fisso
 
 	Mat4F viewMat4F(const Vec3F&,const Vec3F&,const Vec3F&);											  //Matrice di passaggio da world space a view space
-	Mat4F projectionMat4F(const float&, const float&, const float&, Mat4F&); //Matrice per passaggio da view space a clip space
+	Mat4F projectionMat4F(const float&, const float&, const float&); //Matrice per passaggio da view space a clip space
+	Mat4F lookat(const Vec3F& from, const Vec3F& to, const Vec3F& up);
+
 };
 
 ostream& operator<<(ostream&, const Mat4F&);	//Stampa in sequenza Mat4F

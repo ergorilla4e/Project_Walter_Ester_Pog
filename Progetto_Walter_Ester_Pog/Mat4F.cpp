@@ -293,7 +293,7 @@ Mat4F Mat4F::viewMat4F(const Vec3F& eye, const Vec3F& lookAt, const Vec3F& up)
 		0.0f, 0.0f, 0.0f, 1.0f);
 }
 
-Mat4F Mat4F::projectionMat4F(const float& angleOfView, const float& near, const float& far, Mat4F& M)
+Mat4F Mat4F::projectionMat4F(const float& angleOfView, const float& near, const float& far)
 {
 	float S = 1 / tan((angleOfView / 2) * (M_PI / 180));
 
@@ -303,6 +303,19 @@ Mat4F Mat4F::projectionMat4F(const float& angleOfView, const float& near, const 
 						0,0,- (far * near) / (far - near), 0);
 }
 
+Mat4F Mat4F::lookat(const Vec3F& from, const Vec3F& to, const Vec3F& up)
+{
+	Vec3F forward = (from - to).normalize();
+	Vec3F right = (up ^ forward).normalize();
+	Vec3F newup = (forward ^ right).normalize();
+
+	return Mat4F(
+		right.x, newup.x, forward.x, 0,
+		right.y, newup.y, forward.y, 0,
+		right.z, newup.z, forward.z, 0,
+		-(right * from), -(newup * from), -(forward * from), 1
+	);
+}
 
 ostream& operator<<(ostream& output, const Mat4F& mat4f)
 {
