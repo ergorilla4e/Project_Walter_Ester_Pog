@@ -76,6 +76,18 @@
     <None Include="FragmentShader.fs">
       <Filter>File di risorse\Shaders</Filter>
     </None>
+    <None Include="Colors.vs">
+      <Filter>File di risorse\Shaders</Filter>
+    </None>
+    <None Include="Colors.fs">
+      <Filter>File di risorse\Shaders</Filter>
+    </None>
+    <None Include="Light_Cube.vs">
+      <Filter>File di risorse\Shaders</Filter>
+    </None>
+    <None Include="Light_Cube.fs">
+      <Filter>File di risorse\Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Image Include="container.jpg">

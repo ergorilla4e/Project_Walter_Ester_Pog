@@ -149,7 +149,11 @@
     <ClInclude Include="Vec4F.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Colors.fs" />
+    <None Include="Colors.vs" />
     <None Include="FragmentShader.fs" />
+    <None Include="Light_Cube.fs" />
+    <None Include="Light_Cube.vs" />
     <None Include="VertexShader.vs" />
   </ItemGroup>
   <ItemGroup>
