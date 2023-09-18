@@ -78,7 +78,8 @@ int main()
     //Per disegnare il cubo colarato
     Shader_Class lightingShader("Colors.vs", "Colors.fs");
     //Per disegnare il cubo luminoso
-    Shader_Class lightCubeShader("Light_Coube.vs", "Light_Cube.fs");
+    Shader_Class lightCubeShader("Light_Cube.vs", "Light_Cube.fs");
+
     float vertices[] = {
     -0.5f, -0.5f, -0.5f,  //0.0f, 0.0f,
      0.5f, -0.5f, -0.5f,  //1.0f, 0.0f,
@@ -266,8 +267,6 @@ int main()
         lightingShader.setVec3("objectColor", 1.0f, 0.5f, 0.31f);
         lightingShader.setVec3("lightColor", 1.0f, 1.0f, 1.0f);
 
-
-
         lightingShader.setMat4("projection", projection);
         lightingShader.setMat4("view", view);
 
@@ -282,12 +281,13 @@ int main()
         lightCubeShader.setMat4("view", view);
         //Quindi traduciamo il cubo della sorgente luminosa nella posizione della sorgente luminosa e lo ridimensioniamo prima di renderizzarlo
         model = Mat4F(1.0f);
-        model = model.translation(model, lightPos.x, lightPos.y, lightPos.z);
+        model = model.translation(model, sin((float)glfwGetTime() * lightPos.x), lightPos.y, sin((float)glfwGetTime() * lightPos.z));
         model = model.scaling(model, 0.2f); // a smaller cube
         lightCubeShader.setMat4("model", model);
 
         glBindVertexArray(lightCubeVAO);
         glDrawArrays(GL_TRIANGLES, 0, 36);
+
         //model = model.rotationX(model, (float)glfwGetTime() * -55.0f);
         //model = model.rotationY(model, (float)glfwGetTime() * -55.0f);
         //model = model.rotationZ(model, (float)glfwGetTime() * -55.0f);
