@@ -81,47 +81,47 @@ int main()
     Shader_Class lightCubeShader("Light_Cube.vs", "Light_Cube.fs");
 
     float vertices[] = {
-    -0.5f, -0.5f, -0.5f,  //0.0f, 0.0f,
-     0.5f, -0.5f, -0.5f,  //1.0f, 0.0f,
-     0.5f,  0.5f, -0.5f, // 1.0f, 1.0f,
-     0.5f,  0.5f, -0.5f,  //1.0f, 1.0f,
-    -0.5f,  0.5f, -0.5f,  //0.0f, 1.0f,
-    -0.5f, -0.5f, -0.5f,  //0.0f, 0.0f,
+      -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+       0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+       0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+       0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+      -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+      -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
 
-    -0.5f, -0.5f,  0.5f, // 0.0f, 0.0f,
-     0.5f, -0.5f,  0.5f, // 1.0f, 0.0f,
-     0.5f,  0.5f,  0.5f, // 1.0f, 1.0f,
-     0.5f,  0.5f,  0.5f,  //1.0f, 1.0f,
-    -0.5f,  0.5f,  0.5f, // 0.0f, 1.0f,
-    -0.5f, -0.5f,  0.5f,  //0.0f, 0.0f,
+      -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+       0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+       0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+       0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+      -0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+      -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
 
-    -0.5f,  0.5f,  0.5f, // 1.0f, 0.0f,
-    -0.5f,  0.5f, -0.5f, // 1.0f, 1.0f,
-    -0.5f, -0.5f, -0.5f, // 0.0f, 1.0f,
-    -0.5f, -0.5f, -0.5f,  //0.0f, 1.0f,
-    -0.5f, -0.5f,  0.5f,  //0.0f, 0.0f,
-    -0.5f,  0.5f,  0.5f, // 1.0f, 0.0f,
+      -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+      -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+      -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+      -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+      -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+      -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
 
-     0.5f,  0.5f,  0.5f, // 1.0f, 0.0f,
-     0.5f,  0.5f, -0.5f, // 1.0f, 1.0f,
-     0.5f, -0.5f, -0.5f,  //0.0f, 1.0f,
-     0.5f, -0.5f, -0.5f, // 0.0f, 1.0f,
-     0.5f, -0.5f,  0.5f, // 0.0f, 0.0f,
-     0.5f,  0.5f,  0.5f, // 1.0f, 0.0f,
+       0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+       0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+       0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+       0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+       0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+       0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
 
-    -0.5f, -0.5f, -0.5f, // 0.0f, 1.0f,
-     0.5f, -0.5f, -0.5f,  //1.0f, 1.0f,
-     0.5f, -0.5f,  0.5f, // 1.0f, 0.0f,
-     0.5f, -0.5f,  0.5f,  //1.0f, 0.0f,
-    -0.5f, -0.5f,  0.5f, // 0.0f, 0.0f,
-    -0.5f, -0.5f, -0.5f,  //0.0f, 1.0f,
+      -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+       0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+       0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+       0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+      -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+      -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
 
-    -0.5f,  0.5f, -0.5f,  //0.0f, 1.0f,
-     0.5f,  0.5f, -0.5f, // 1.0f, 1.0f,
-     0.5f,  0.5f,  0.5f, // 1.0f, 0.0f,
-     0.5f,  0.5f,  0.5f, // 1.0f, 0.0f,
-    -0.5f,  0.5f,  0.5f, // 0.0f, 0.0f,
-    -0.5f,  0.5f, -0.5f, // 0.0f, 1.0f
+      -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
+       0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
+       0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+       0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+      -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+      -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f
     };
 
    /* Vec3F cubePositions[] = {
@@ -169,8 +169,13 @@ int main()
     //glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
     // Attributi posizione
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0); //Si vogliono utilizzare solo i primi tre float, quindi bisogna aggiornare il parametro di 6
     glEnableVertexAttribArray(0);
+
+
+    // Attributi della 
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
 
     // Attributi colori
     //glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8* sizeof(float), (void*)(3 * sizeof(float)));
@@ -203,7 +208,7 @@ int main()
     glBindVertexArray(lightCubeVAO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE,  6* sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
     /*unsigned int texture1,texture2;
     Texture_Class textureClass(1);
@@ -255,7 +260,7 @@ int main()
        // shader.use();
 
         Mat4F projection = Mat4F(1.0f);
-        projection = projection.projectionMat4F(camera.Zoom, (float)SCR_WIDTH / (float)SCR_HEIGHT, 10.f);
+        projection = projection.projectionMat4F(camera.Zoom, (float)SCR_WIDTH / (float)SCR_HEIGHT, 100.0f);
        // shader.setMat4("projection", projection);
 
         Mat4F view = camera.GetMatriceVisualizzazione();
@@ -266,6 +271,8 @@ int main()
         //Impostiamo il colore dell'oggetto sul colore corallo dell'ultima sezione con una luce bianca
         lightingShader.setVec3("objectColor", 1.0f, 0.5f, 0.31f);
         lightingShader.setVec3("lightColor", 1.0f, 1.0f, 1.0f);
+        lightingShader.setVec3("lightPos", lightPos);
+        lightingShader.setVec3("viewPos", camera.Posizione);
 
         lightingShader.setMat4("projection", projection);
         lightingShader.setMat4("view", view);
@@ -281,7 +288,10 @@ int main()
         lightCubeShader.setMat4("view", view);
         //Quindi traduciamo il cubo della sorgente luminosa nella posizione della sorgente luminosa e lo ridimensioniamo prima di renderizzarlo
         model = Mat4F(1.0f);
-        model = model.translation(model, sin((float)glfwGetTime() * lightPos.x), lightPos.y, sin((float)glfwGetTime() * lightPos.z));
+        lightPos.x = cos((float)glfwGetTime() + lightPos.x);
+        lightPos.z = cos((float)glfwGetTime() + lightPos.z);
+
+        model = model.translation(model, lightPos.x, lightPos.y, lightPos.z);
         model = model.scaling(model, 0.2f); // a smaller cube
         lightCubeShader.setMat4("model", model);
 
