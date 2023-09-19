@@ -104,13 +104,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Librerie\glfw\include;C:\Librerie\glad\include;C:\Librerie\rapidxml\lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Librerie\glfw\include;C:\Librerie\glad\include;C:\Librerie\rapidxml\lib;C:\Librerie\assimp\Assimp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Librerie\glfw\lib-vc2022;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Librerie\glfw\lib-vc2022;C:\Librerie\assimp\Assimp\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glfw3.lib;assimp-vc143-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -133,10 +133,12 @@
     <ClCompile Include="Camera_Class.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="Mat4F.cpp" />
+    <ClCompile Include="Mesh_Class.cpp" />
     <ClCompile Include="Progetto_Walter_Ester_Pog.cpp" />
     <ClCompile Include="Quaternion.cpp" />
     <ClCompile Include="Shader_Class.cpp" />
     <ClCompile Include="Texture_Class.cpp" />
+    <ClCompile Include="Vec2F.cpp" />
     <ClCompile Include="Vec3F.cpp" />
     <ClCompile Include="Vec4F.cpp" />
   </ItemGroup>
@@ -145,6 +147,7 @@
     <ClInclude Include="Mat4F.h" />
     <ClInclude Include="Quaternion.h" />
     <ClInclude Include="stb_image.h" />
+    <ClInclude Include="Vec2F.h" />
     <ClInclude Include="Vec3F.h" />
     <ClInclude Include="Vec4F.h" />
   </ItemGroup>

@@ -17,6 +17,7 @@ using namespace std;
 
 
 //VETTORI
+#include "Vec2F.h"
 #include "Vec3F.h"
 #include "Vec4F.h"
 
@@ -38,8 +39,11 @@ using namespace std;
 #include <RAPIDXML/rapidxml_iterators.hpp>
 #include <RAPIDXML/rapidxml_print.hpp>
 #include <RAPIDXML/rapidxml_utils.hpp>
-
 #include "stb_image.h"
+
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
 
 //CLASSI AGGIUNTIVE
 #include "Shader_Class.cpp"
