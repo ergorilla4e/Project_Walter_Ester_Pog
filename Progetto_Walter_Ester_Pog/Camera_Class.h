@@ -1,7 +1,7 @@
-#ifndef CAMERA_H
-#define CAMERA_H
+#pragma once
+#ifndef CAMERA_CLASS_H
+#define CAMERA_CLASS_H
 
-#include "Generale.h"
 
 // Definisce diverse opzioni possibili per il movimento della telecamera. Usate come astrazione per rimanere indipendenti dai metodi specifici di input del sistema di finestra.
 enum Camera_Movement {

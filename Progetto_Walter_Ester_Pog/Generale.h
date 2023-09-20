@@ -1,4 +1,6 @@
 #pragma once
+#ifndef GENERALE_H
+#define GENERALE_H
 
 //DEFINIZIONI
 #define _USE_MATH_DEFINES
@@ -10,6 +12,8 @@
 #include <string>
 #include <fstream>
 #include <sstream>
+#include <vector>
+#include <map>
 
 
 //NAMESPACE
@@ -41,11 +45,5 @@ using namespace std;
 #include <RAPIDXML/rapidxml_utils.hpp>
 #include "stb_image.h"
 
-#include <assimp/Importer.hpp>
-#include <assimp/scene.h>
-#include <assimp/postprocess.h>
 
-//CLASSI AGGIUNTIVE
-#include "Shader_Class.cpp"
-#include "Texture_Class.cpp"
-#include "Camera_Class.cpp"
+#endif

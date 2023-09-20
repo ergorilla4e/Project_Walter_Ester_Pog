@@ -1,10 +1,8 @@
-#ifndef SHADER_H
-#define SHADER_H
+#pragma once
+#ifndef SHADER_CLASS_H
+#define SHADER_CLASS_H
 
-#include "Generale.h"
 
-
-using namespace std;
 class Shader_Class
 {
 public:

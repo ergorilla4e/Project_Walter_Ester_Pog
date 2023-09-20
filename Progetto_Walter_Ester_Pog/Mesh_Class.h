@@ -1,10 +1,7 @@
-#ifndef MESH_H
-#define MESH_H
+#pragma once
+#ifndef MESH_CLASS_H
+#define MESH_CLASS_H
 
-#include "Generale.h"
-#include <string>
-#include <vector>
-using namespace std;
 
 #define MAX_BONE_INFLUENCE 4
 
@@ -87,6 +84,7 @@ public:
         // always good practice to set everything back to defaults once configured.
         glActiveTexture(GL_TEXTURE0);
     }
+
 
 private:
     // render data 

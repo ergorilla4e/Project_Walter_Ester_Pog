@@ -1,20 +1,19 @@
+#pragma once
 #ifndef TEXTURE_H
 #define TEXTURE_H
 
 #include "Generale.h"
 
-using namespace std;
-
 class Texture_Class
 {
     int Texture;
 public:
-    Texture_Class(int Texture) 
+    Texture_Class(int Texture)
     {
-        this->Texture=Texture;
+        this->Texture = Texture;
     }
 
-    void calcoloTexture(const char* fileName,bool inverti = false, bool rgbORrgba = false, unsigned int rep = GL_REPEAT, unsigned int lin = GL_LINEAR, unsigned int* texture = 0)
+    void calcoloTexture(const char* fileName, bool inverti = false, bool rgbORrgba = false, unsigned int rep = GL_REPEAT, unsigned int lin = GL_LINEAR, unsigned int* texture = 0)
     {
         // Genera una texture OpenGL vuota
         glGenTextures(1, texture);
