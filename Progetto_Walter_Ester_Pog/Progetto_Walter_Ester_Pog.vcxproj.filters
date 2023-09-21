@@ -106,12 +106,27 @@
     <None Include="Model.fs">
       <Filter>File di risorse\Shaders</Filter>
     </None>
+    <None Include="Material.fs">
+      <Filter>File di risorse\Shaders</Filter>
+    </None>
+    <None Include="Material.vs">
+      <Filter>File di risorse\Shaders</Filter>
+    </None>
+    <None Include="Lighting_Maps.vs">
+      <Filter>File di risorse\Shaders</Filter>
+    </None>
+    <None Include="Lighting_Maps.fs">
+      <Filter>File di risorse\Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Image Include="container.jpg">
       <Filter>File di risorse\Textures</Filter>
     </Image>
     <Image Include="awesomeface.png">
+      <Filter>File di risorse\Textures</Filter>
+    </Image>
+    <Image Include="container2.png">
       <Filter>File di risorse\Textures</Filter>
     </Image>
   </ItemGroup>
