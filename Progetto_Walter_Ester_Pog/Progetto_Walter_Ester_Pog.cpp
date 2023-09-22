@@ -223,8 +223,6 @@ int main()
        //  modelShader.setMat4("projection", projection);
       //  modelShader.setMat4("view", view);
 
-
-
         /*lightShader.use();
         lightShader.setVec3("viewPos", camera.Posizione);
         //proprietà dei materiali
@@ -330,9 +328,9 @@ int main()
         ourModelShader.setFloat("material.shininess", 32.0f);
 
         ourModelShader.setVec3("dirLight.direction", -0.2f, -1.0f, -0.3f);
-        ourModelShader.setVec3("dirLight.ambient", 0.05f, 0.05f, 0.05f);
-        ourModelShader.setVec3("dirLight.diffuse", 0.4f, 0.4f, 0.4f);
-        ourModelShader.setVec3("dirLight.specular", 0.5f, 0.5f, 0.5f);
+        ourModelShader.setVec3("dirLight.ambient", 0.025f, 0.025f, 0.025f);
+        ourModelShader.setVec3("dirLight.diffuse", 0.2f, 0.2f, 0.2f);
+        ourModelShader.setVec3("dirLight.specular", 0.25f, 0.25f, 0.25f);
         // point light 1
         ourModelShader.setVec3("pointLights[0].position", pointLightPositions[0]);
         ourModelShader.setVec3("pointLights[0].ambient", 0.05f, 0.05f, 0.05f);
@@ -374,8 +372,7 @@ int main()
         ourModelShader.setFloat("pointLights[4].linear", 0.09f);
         ourModelShader.setFloat("pointLights[4].quadratic", 0.032f);
 
-        // modelShader.setMat4("model", model);
-         ourModel.Draw(ourModelShader);
+        ourModel.Draw(ourModelShader);
 
          // glfw: scambia i buffer e gestisci gli eventi di input (tasti premuti/rilasciati, movimenti del mouse, ecc.)
          // -------------------------------------------------------------------------------
