@@ -21,7 +21,7 @@ const unsigned int SCR_WIDTH = 1920;
 const unsigned int SCR_HEIGHT = 1080;
 
 // camera
-Camera_Class camera(Vec3F(0.0f, 0.0f, 3.0f));
+Camera_Class camera(Vec3F(0.0f, 1.5f, 3.0f));
 float lastX = SCR_WIDTH / 2.0f;
 float lastY = SCR_HEIGHT / 2.0f;
 bool firstMouse = true;
@@ -41,7 +41,7 @@ int main()
 
     // Creazione di un vettore di 4 elementi con valori specifici
     Vec4F vettore = { 0.1f,0.1f,0.1f,1.0f };
-
+    camera.VelocitaMovimento = 5.f;
     //----------------------------------
 
     // Inizializza e configura GLFW
@@ -87,58 +87,60 @@ int main()
     //Per disegnare il cubo colarato
    // Shader_Class modelShader("Model.vs", "Model.fs");
     //Per disegnare il cubo luminoso
-    Shader_Class lightShader("Light.vs", "Light.fs"); 
-    Shader_Class lightCubeShader("Light_Cube.vs", "Light_Cube.fs");
+    //Shader_Class lightShader("Light.vs", "Light.fs");
 
-    //Model_Class ourModel("C:/Modelli/backpack/backpack.obj");
+    Shader_Class lightCubeShader("Light_Cube.vs", "Light_Cube.fs");
+    Shader_Class ourModelShader("Light.vs", "Light.fs");
+
+    Model_Class ourModel("C:/Modelli/Map/Gallery_Nom_04.obj");
 
     float vertices[] = {
         // positions          // normals           // texture coords
-        -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,
-         0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  0.0f,
-         0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f,
-         0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,
-
-        -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,
-         0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  0.0f,
-         0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  1.0f,
-         0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  1.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  1.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,
-
-        -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
-        -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  1.0f,
-        -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
-        -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
-        -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  0.0f,
-        -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
-
-         0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
-         0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  1.0f,
-         0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
-         0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
-         0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  0.0f,
-         0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
-
-        -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  1.0f,
-         0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  1.0f,
-         0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  0.0f,
-         0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  0.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  0.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  1.0f,
-
-        -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f,
-         0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  1.0f,
-         0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  0.0f,
-         0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  0.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  0.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f
+        -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  //0.0f,  0.0f,
+         0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  //1.0f,  0.0f,
+         0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  //1.0f,  1.0f,
+         0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  //1.0f,  1.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  //0.0f,  1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  //0.0f,  0.0f,
+                                                   //
+        -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  //0.0f,  0.0f,
+         0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  //1.0f,  0.0f,
+         0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  //1.0f,  1.0f,
+         0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  //1.0f,  1.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  //0.0f,  1.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  //0.0f,  0.0f,
+                                                   //
+        -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  //1.0f,  0.0f,
+        -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  //1.0f,  1.0f,
+        -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  //0.0f,  1.0f,
+        -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  //0.0f,  1.0f,
+        -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  //0.0f,  0.0f,
+        -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  //1.0f,  0.0f,
+                                                   //
+         0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  //1.0f,  0.0f,
+         0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  //1.0f,  1.0f,
+         0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  //0.0f,  1.0f,
+         0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  //0.0f,  1.0f,
+         0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  //0.0f,  0.0f,
+         0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  //1.0f,  0.0f,
+                                                   //
+        -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  //0.0f,  1.0f,
+         0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  //1.0f,  1.0f,
+         0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  //1.0f,  0.0f,
+         0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  //1.0f,  0.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  //0.0f,  0.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  //0.0f,  1.0f,
+                                                   //
+        -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  //0.0f,  1.0f,
+         0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  //1.0f,  1.0f,
+         0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  //1.0f,  0.0f,
+         0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  //1.0f,  0.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  //0.0f,  0.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  //0.0f,  1.0f
     };
 
     //posizione dei conteinere
-    Vec3F cubePosition[] = {
+   /* Vec3F cubePosition[] = {
         Vec3F(0.0f,  0.0f,  0.0f),
         Vec3F(2.0f,  5.0f, -15.0f),
         Vec3F(-1.5f, -2.2f, -2.5f),
@@ -150,47 +152,54 @@ int main()
         Vec3F(1.5f,  0.2f, -1.5f),
         Vec3F(-1.3f,  1.0f, -1.5f)
 
-    };
+    };*/
     //posizione della luce puntiforme 
     Vec3F pointLightPositions[] = {
-    Vec3F(2.3f, -3.3f, -4.0f),
-    Vec3F(-4.0f,  2.0f, -12.0f),
-    Vec3F(0.0f,  0.0f, -3.0f),
-    Vec3F(0.7f,  0.2f,  2.0f)
+    Vec3F(-4.4f, 2.8f, -1.2f),
+    Vec3F(8.3f, 2.8f, -1.2f),
+    Vec3F(-3.8f, 2.8f, 9.2f),
+    Vec3F(7.9f, 2.8f, -9.2f),
+    Vec3F(7.9f, 2.8f, 9.0f)
     };
     //Vogliamo generare un nuovo VAO specifico per la sorgente luminosa.
-    unsigned int VBO, cubeVAO;
-    glGenVertexArrays(1, &cubeVAO);
+    //unsigned int VBO, cubeVAO;
+    //glGenVertexArrays(1, &cubeVAO);
+    //glGenBuffers(1, &VBO);
+    //
+    //glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    //glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    // 
+    //glBindVertexArray(cubeVAO);
+    //
+    //glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+    //glEnableVertexAttribArray(0);
+    //glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+    //glEnableVertexAttribArray(1);
+    //glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+    //glEnableVertexAttribArray(2);
+
+    unsigned int VBO, lightCubeVAO;
+    glGenVertexArrays(1, &lightCubeVAO);
     glGenBuffers(1, &VBO);
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-     
-    glBindVertexArray(cubeVAO);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-    glEnableVertexAttribArray(2);
-
-    unsigned int lightCubeVAO;
-    glGenVertexArrays(1, &lightCubeVAO);
     glBindVertexArray(lightCubeVAO);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+
+    //glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
     //caricamento della texture 
-    unsigned int texture1, texture2;
-    Texture_Class textureClass(1);
-    textureClass.calcoloTexture("container2.png", true, false, GL_REPEAT, GL_LINEAR, &texture1);
-    textureClass.calcoloTexture("container2_specular.png", true, false, GL_REPEAT, GL_LINEAR, &texture2);
+    //unsigned int texture1, texture2;
+    //Texture_Class textureClass(1);
+    //textureClass.calcoloTexture("container2.png", true, false, GL_REPEAT, GL_LINEAR, &texture1);
+    //textureClass.calcoloTexture("container2_specular.png", true, false, GL_REPEAT, GL_LINEAR, &texture2);
 
     //Configurazione shader
-    lightShader.use();
-    lightShader.setInt("material.diffuse", 0);
-    lightShader.setInt("material.specular", 1);
+    ourModelShader.use();
+    ourModelShader.setInt("material.diffuse", 0);
+    ourModelShader.setInt("material.specular", 1);
     // Ciclo di rendering
     // -----------
     while (!glfwWindowShouldClose(window))
@@ -216,7 +225,7 @@ int main()
 
 
 
-        lightShader.use();
+        /*lightShader.use();
         lightShader.setVec3("viewPos", camera.Posizione);
         //proprietà dei materiali
         lightShader.setFloat("material.shininess", 32.0f);
@@ -257,29 +266,30 @@ int main()
         lightShader.setFloat("pointLights[3].constant", 1.0f);
         lightShader.setFloat("pointLights[3].linear", 0.09f);
         lightShader.setFloat("pointLights[3].quadratic", 0.032f);
-
+        */
         
+        //lightCubeShader.use();
+
         //view/projection trasformation 
         Mat4F projection = projection.projectionMat4F(camera.Zoom, (float)SCR_WIDTH / (float)SCR_HEIGHT, 100.0f);
         
         Mat4F view = camera.GetMatriceVisualizzazione();
         view = view.transpose(view);
-        lightShader.setMat4("projection", projection);
-        lightShader.setMat4("view", view);
+        //lightShader.setMat4("projection", projection);
+        //lightShader.setMat4("view", view);
         //trasformazioni globali
-        Mat4F model = Mat4F(1.0f);
         //model = model.rotationZ(model, 30.0f);
-        lightShader.setMat4("model", model);
+        //lightShader.setMat4("model", model);
 
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, texture1); 
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, texture2);
-        // render del cubo
-        glBindVertexArray(cubeVAO);
+        //glActiveTexture(GL_TEXTURE0);
+        //glBindTexture(GL_TEXTURE_2D, texture1); 
+        //glActiveTexture(GL_TEXTURE1);
+        //glBindTexture(GL_TEXTURE_2D, texture2);
+        //// render del cubo
+        //glBindVertexArray(cubeVAO);
        
 
-        for (unsigned int i = 0; i < 10; i++)
+       /* for (unsigned int i = 0; i < 10; i++)
         {
             Mat4F model = Mat4F(1.0f);
             model = model.translation(model, cubePosition[i].x,cubePosition[i].y, cubePosition[i].z);
@@ -287,7 +297,7 @@ int main()
             model = model.rotateAllAxis(model, angle, Vec3F(1.0f, 0.3f, 0.5f));
             lightShader.setMat4("model", model);
             glDrawArrays(GL_TRIANGLES, 0, 36);
-        }
+        }*/
 
 
         //Disegno dell'oggetto lampada
@@ -295,19 +305,77 @@ int main()
         lightCubeShader.setMat4("projection", projection);
         lightCubeShader.setMat4("view", view);
         glBindVertexArray(lightCubeVAO);
-        for (unsigned int i = 0; i < 4; i++)
+        for (unsigned int i = 0; i < 5; i++)
         {
-            Mat4F model = Mat4F(1.0f);
-            model = model.translation(model, pointLightPositions[i].x, pointLightPositions[i].y, pointLightPositions[i].z);
-            model = model.scaling(model, 0.2f); 
-            lightCubeShader.setMat4("model", model);
+            Mat4F modelLight = Mat4F(1.0f);
+            modelLight = modelLight.translation(modelLight, pointLightPositions[i].x, pointLightPositions[i].y, pointLightPositions[i].z);
+            modelLight = modelLight.scaling(modelLight, 0.2f);
+            lightCubeShader.setMat4("model", modelLight);
             glDrawArrays(GL_TRIANGLES, 0, 36);
         }
 
+        Mat4F modelObject = Mat4F(1.0f);
+        ourModelShader.use();
+        ourModelShader.setMat4("projection", projection);
+        ourModelShader.setMat4("view", view);
 
+        modelObject = modelObject.scaling(modelObject, 0.008f);
+
+        ourModelShader.setMat4("model", modelObject);
+
+        //ourModelShader.use();
+        ourModelShader.setVec3("viewPos", camera.Posizione);
+
+        //proprietà dei materiali
+        ourModelShader.setFloat("material.shininess", 32.0f);
+
+        ourModelShader.setVec3("dirLight.direction", -0.2f, -1.0f, -0.3f);
+        ourModelShader.setVec3("dirLight.ambient", 0.05f, 0.05f, 0.05f);
+        ourModelShader.setVec3("dirLight.diffuse", 0.4f, 0.4f, 0.4f);
+        ourModelShader.setVec3("dirLight.specular", 0.5f, 0.5f, 0.5f);
+        // point light 1
+        ourModelShader.setVec3("pointLights[0].position", pointLightPositions[0]);
+        ourModelShader.setVec3("pointLights[0].ambient", 0.05f, 0.05f, 0.05f);
+        ourModelShader.setVec3("pointLights[0].diffuse", 0.8f, 0.8f, 0.8f);
+        ourModelShader.setVec3("pointLights[0].specular", 1.0f, 1.0f, 1.0f);
+        ourModelShader.setFloat("pointLights[0].constant", 1.0f);
+        ourModelShader.setFloat("pointLights[0].linear", 0.09f);
+        ourModelShader.setFloat("pointLights[0].quadratic", 0.032f);
+        // point light 2
+        ourModelShader.setVec3("pointLights[1].position", pointLightPositions[1]);
+        ourModelShader.setVec3("pointLights[1].ambient", 0.05f, 0.05f, 0.05f);
+        ourModelShader.setVec3("pointLights[1].diffuse", 0.8f, 0.8f, 0.8f);
+        ourModelShader.setVec3("pointLights[1].specular", 1.0f, 1.0f, 1.0f);
+        ourModelShader.setFloat("pointLights[1].constant", 1.0f);
+        ourModelShader.setFloat("pointLights[1].linear", 0.09f);
+        ourModelShader.setFloat("pointLights[1].quadratic", 0.032f);
+        // point light 3
+        ourModelShader.setVec3("pointLights[2].position", pointLightPositions[2]);
+        ourModelShader.setVec3("pointLights[2].ambient", 0.05f, 0.05f, 0.05f);
+        ourModelShader.setVec3("pointLights[2].diffuse", 0.8f, 0.8f, 0.8f);
+        ourModelShader.setVec3("pointLights[2].specular", 1.0f, 1.0f, 1.0f);
+        ourModelShader.setFloat("pointLights[2].constant", 1.0f);
+        ourModelShader.setFloat("pointLights[2].linear", 0.09f);
+        ourModelShader.setFloat("pointLights[2].quadratic", 0.032f);
+        // point light 4
+        ourModelShader.setVec3("pointLights[3].ambient", 0.05f, 0.05f, 0.05f);
+        ourModelShader.setVec3("pointLights[3].diffuse", 0.8f, 0.8f, 0.8f);
+        ourModelShader.setVec3("pointLights[3].specular", 1.0f, 1.0f, 1.0f);
+        ourModelShader.setVec3("pointLights[3].position", pointLightPositions[3]);
+        ourModelShader.setFloat("pointLights[3].constant", 1.0f);
+        ourModelShader.setFloat("pointLights[3].linear", 0.09f);
+        ourModelShader.setFloat("pointLights[3].quadratic", 0.032f);
+        // point light 4
+        ourModelShader.setVec3("pointLights[4].ambient", 0.05f, 0.05f, 0.05f);
+        ourModelShader.setVec3("pointLights[4].diffuse", 0.8f, 0.8f, 0.8f);
+        ourModelShader.setVec3("pointLights[4].specular", 1.0f, 1.0f, 1.0f);
+        ourModelShader.setVec3("pointLights[4].position", pointLightPositions[4]);
+        ourModelShader.setFloat("pointLights[4].constant", 1.0f);
+        ourModelShader.setFloat("pointLights[4].linear", 0.09f);
+        ourModelShader.setFloat("pointLights[4].quadratic", 0.032f);
 
         // modelShader.setMat4("model", model);
-         //ourModel.Draw(modelShader);
+         ourModel.Draw(ourModelShader);
 
          // glfw: scambia i buffer e gestisci gli eventi di input (tasti premuti/rilasciati, movimenti del mouse, ecc.)
          // -------------------------------------------------------------------------------
@@ -317,7 +385,7 @@ int main()
 
     // Opzionale: dealloca tutte le risorse una volta che hanno terminato il loro scopo:
     // ------------------------------------------------------------------------
-    glDeleteVertexArrays(1, &cubeVAO);
+    //glDeleteVertexArrays(1, &cubeVAO);
     glDeleteVertexArrays(1, &lightCubeVAO);
     glDeleteBuffers(1, &VBO);
     //glDeleteBuffers(1, &EBO);
@@ -337,13 +405,27 @@ void processInput(GLFWwindow* window)
         glfwSetWindowShouldClose(window, true);
 
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+    { 
         camera.ProcessKeyboard(AVANTI, deltaTime);
+        cout << camera.Posizione << endl;
+    }
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+    {
         camera.ProcessKeyboard(INDIETRO, deltaTime);
+        cout << camera.Posizione << endl;
+    }
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+    {
         camera.ProcessKeyboard(SINISTRA, deltaTime);
+        cout << camera.Posizione << endl;
+    }
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+    {
         camera.ProcessKeyboard(DESTRA, deltaTime);
+        cout << camera.Posizione << endl;
+    }
+
+    
 }
 
 // glfw: ogni volta che la dimensione della finestra cambia (per resize dell'OS o dell'utente), questa funzione di callback viene eseguita

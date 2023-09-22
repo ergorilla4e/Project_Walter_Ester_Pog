@@ -26,7 +26,7 @@ struct PointLight {
 };
 
 
-#define NR_POINT_LIGHTS 4
+#define NR_POINT_LIGHTS 5
 
 in vec3 FragPos;
 in vec3 Normal;
@@ -56,7 +56,7 @@ void main()
     
       
     
-    FragColor = vec4(result, 1.0);
+    FragColor = vec4(result,1.0);
 };
 
 
