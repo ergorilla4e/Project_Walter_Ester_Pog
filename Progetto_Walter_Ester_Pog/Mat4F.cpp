@@ -277,6 +277,37 @@ Mat4F Mat4F::rotationZ(Mat4F m,float deg)
 	return calc;
 }
 
+
+Mat4F Mat4F::rotateAllAxis(const Mat4F& model, float angle, const Vec3F& axis) {
+	float radians = toRad(angle);
+	float cosA = cos(radians);
+	float sinA = sin(radians);
+	float oneMinusCosA = 1.0f - cosA;
+
+	// Crea la matrice di rotazione
+	Mat4F rotationMatrix;
+
+	// Calcola gli elementi della matrice di rotazione
+	rotationMatrix(0, 0) = cosA + (axis.x * axis.x) * oneMinusCosA;
+	rotationMatrix(0, 1) = axis.x * axis.y * oneMinusCosA - axis.z * sinA;
+	rotationMatrix(0, 2) = axis.x * axis.z * oneMinusCosA + axis.y * sinA;
+
+	rotationMatrix(1, 0) = axis.y * axis.x * oneMinusCosA + axis.z * sinA;
+	rotationMatrix(1, 1) = cosA + (axis.y * axis.y) * oneMinusCosA;
+	rotationMatrix(1, 2) = axis.y * axis.z * oneMinusCosA - axis.x * sinA;
+
+	rotationMatrix(2, 0) = axis.z * axis.x * oneMinusCosA - axis.y * sinA;
+	rotationMatrix(2, 1) = axis.z * axis.y * oneMinusCosA + axis.x * sinA;
+	rotationMatrix(2, 2) = cosA + (axis.z * axis.z) * oneMinusCosA;
+
+	// Ora moltiplica la matrice di rotazione per la matrice model
+	Mat4F result = model * rotationMatrix;
+
+	return result;
+
+}
+
+
 Mat4F Mat4F::viewMat4F(const Vec3F& eye, const Vec3F& lookAt, const Vec3F& up)
 {
 	Vec3F _z = (eye - lookAt);
@@ -334,3 +365,5 @@ ostream& operator<<(ostream& output, const Mat4F& mat4f)
 
 	return output;
 }
+
+

@@ -156,8 +156,12 @@
     <None Include="Colors.fs" />
     <None Include="Colors.vs" />
     <None Include="FragmentShader.fs" />
+    <None Include="Light.fs" />
+    <None Include="Light.vs" />
     <None Include="Lighting_Maps.fs" />
     <None Include="Lighting_Maps.vs" />
+    <None Include="Light_Casters.fs" />
+    <None Include="Light_Casters.vs" />
     <None Include="Light_Cube.fs" />
     <None Include="Light_Cube.vs" />
     <None Include="Material.fs" />
@@ -170,6 +174,7 @@
     <Image Include="awesomeface.png" />
     <Image Include="container.jpg" />
     <Image Include="container2.png" />
+    <Image Include="container2_specular.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

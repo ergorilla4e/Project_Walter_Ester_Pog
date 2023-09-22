@@ -118,6 +118,18 @@
     <None Include="Lighting_Maps.fs">
       <Filter>File di risorse\Shaders</Filter>
     </None>
+    <None Include="Light_Casters.vs">
+      <Filter>File di risorse\Shaders</Filter>
+    </None>
+    <None Include="Light_Casters.fs">
+      <Filter>File di risorse\Shaders</Filter>
+    </None>
+    <None Include="Light.vs">
+      <Filter>File di risorse\Shaders</Filter>
+    </None>
+    <None Include="Light.fs">
+      <Filter>File di risorse\Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Image Include="container.jpg">
@@ -127,6 +139,9 @@
       <Filter>File di risorse\Textures</Filter>
     </Image>
     <Image Include="container2.png">
+      <Filter>File di risorse\Textures</Filter>
+    </Image>
+    <Image Include="container2_specular.png">
       <Filter>File di risorse\Textures</Filter>
     </Image>
   </ItemGroup>

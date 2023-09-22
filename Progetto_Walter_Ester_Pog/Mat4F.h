@@ -36,10 +36,12 @@ public:
 	Mat4F rotationX(Mat4F,float);					//Ruota il piano Y.Z con X fisso
 	Mat4F rotationY(Mat4F,float);					//Ruota il piano X.Z con Y fisso
 	Mat4F rotationZ(Mat4F,float);					//Ruota il piano X.Y con Z fisso
+	Mat4F rotateAllAxis(const Mat4F& model, float angle, const Vec3F& axis);
 
 	Mat4F viewMat4F(const Vec3F&,const Vec3F&,const Vec3F&);											  //Matrice di passaggio da world space a view space
 	Mat4F projectionMat4F(const float&, const float&, const float&); //Matrice per passaggio da view space a clip space
 	Mat4F lookat(const Vec3F& from, const Vec3F& to, const Vec3F& up);
+	
 
 };
 
