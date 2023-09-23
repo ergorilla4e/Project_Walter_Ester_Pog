@@ -124,10 +124,10 @@
     <None Include="Light_Casters.fs">
       <Filter>File di risorse\Shaders</Filter>
     </None>
-    <None Include="Light.vs">
+    <None Include="Model_VS.vs">
       <Filter>File di risorse\Shaders</Filter>
     </None>
-    <None Include="Light.fs">
+    <None Include="Model_FS.fs">
       <Filter>File di risorse\Shaders</Filter>
     </None>
   </ItemGroup>

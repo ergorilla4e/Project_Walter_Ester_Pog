@@ -90,7 +90,7 @@ int main()
     //Shader_Class lightShader("Light.vs", "Light.fs");
 
     Shader_Class lightCubeShader("Light_Cube.vs", "Light_Cube.fs");
-    Shader_Class ourModelShader("Light.vs", "Light.fs");
+    Shader_Class ourModelShader("Model_VS.vs", "Model_FS.fs");
 
     Model_Class ourModel("C:/Modelli/Map/Gallery_Nom_04.obj");
 
