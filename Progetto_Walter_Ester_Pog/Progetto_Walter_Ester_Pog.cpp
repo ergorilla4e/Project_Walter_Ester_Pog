@@ -30,7 +30,7 @@ float deltaTime = 0.0f;	// Time between current frame and last frame
 float lastFrame = 0.0f; // Time of last frame
 //Illuminazione
 //appresenta la posizione della sorgente luminosa nelle coordinate dello spazio mondiale
-Vec3F lightPos(1.2f, 1.0f, 1.1f);
+Vec3F lightPos(0.0f, 0.0f, 0.0f);
 
 int main()
 {
