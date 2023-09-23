@@ -341,11 +341,18 @@ Mat4F Mat4F::lookat(const Vec3F& from, const Vec3F& to, const Vec3F& up)
 	Vec3F newup = (forward ^ right).normalize();
 
 	return Mat4F(
+				right.x,	right.y,	 right.z,    -(right * from),
+				newup.x,	newup.y,	 newup.z,    -(newup * from),
+				forward.x,	forward.y,   forward.z,  -(forward * from),
+					0,		   0,			0,		    	1
+	);
+
+	/*return Mat4F(
 		right.x, newup.x, forward.x, 0,
 		right.y, newup.y, forward.y, 0,
 		right.z, newup.z, forward.z, 0,
 		-(right * from), -(newup * from), -(forward * from), 1
-	);
+	);*/
 }
 
 ostream& operator<<(ostream& output, const Mat4F& mat4f)

@@ -92,6 +92,7 @@ int main()
     Shader_Class lightCubeShader("Light_Cube.vs", "Light_Cube.fs");
     Shader_Class ourModelShader("Model_VS.vs", "Model_FS.fs");
 
+    //Model_Class ourModel("C:/Modelli/backpack/backpack.obj");
     Model_Class ourModel("C:/Modelli/Map/Gallery_Nom_04.obj");
 
     float vertices[] = {
@@ -270,9 +271,9 @@ int main()
 
         //view/projection trasformation 
         Mat4F projection = projection.projectionMat4F(camera.Zoom, (float)SCR_WIDTH / (float)SCR_HEIGHT, 100.0f);
-        
         Mat4F view = camera.GetMatriceVisualizzazione();
-        view = view.transpose(view);
+
+        //view = view.transpose(view);
         //lightShader.setMat4("projection", projection);
         //lightShader.setMat4("view", view);
         //trasformazioni globali
@@ -331,46 +332,17 @@ int main()
         ourModelShader.setVec3("dirLight.ambient", 0.025f, 0.025f, 0.025f);
         ourModelShader.setVec3("dirLight.diffuse", 0.2f, 0.2f, 0.2f);
         ourModelShader.setVec3("dirLight.specular", 0.25f, 0.25f, 0.25f);
-        // point light 1
-        ourModelShader.setVec3("pointLights[0].position", pointLightPositions[0]);
-        ourModelShader.setVec3("pointLights[0].ambient", 0.05f, 0.05f, 0.05f);
-        ourModelShader.setVec3("pointLights[0].diffuse", 0.8f, 0.8f, 0.8f);
-        ourModelShader.setVec3("pointLights[0].specular", 1.0f, 1.0f, 1.0f);
-        ourModelShader.setFloat("pointLights[0].constant", 1.0f);
-        ourModelShader.setFloat("pointLights[0].linear", 0.09f);
-        ourModelShader.setFloat("pointLights[0].quadratic", 0.032f);
-        // point light 2
-        ourModelShader.setVec3("pointLights[1].position", pointLightPositions[1]);
-        ourModelShader.setVec3("pointLights[1].ambient", 0.05f, 0.05f, 0.05f);
-        ourModelShader.setVec3("pointLights[1].diffuse", 0.8f, 0.8f, 0.8f);
-        ourModelShader.setVec3("pointLights[1].specular", 1.0f, 1.0f, 1.0f);
-        ourModelShader.setFloat("pointLights[1].constant", 1.0f);
-        ourModelShader.setFloat("pointLights[1].linear", 0.09f);
-        ourModelShader.setFloat("pointLights[1].quadratic", 0.032f);
-        // point light 3
-        ourModelShader.setVec3("pointLights[2].position", pointLightPositions[2]);
-        ourModelShader.setVec3("pointLights[2].ambient", 0.05f, 0.05f, 0.05f);
-        ourModelShader.setVec3("pointLights[2].diffuse", 0.8f, 0.8f, 0.8f);
-        ourModelShader.setVec3("pointLights[2].specular", 1.0f, 1.0f, 1.0f);
-        ourModelShader.setFloat("pointLights[2].constant", 1.0f);
-        ourModelShader.setFloat("pointLights[2].linear", 0.09f);
-        ourModelShader.setFloat("pointLights[2].quadratic", 0.032f);
-        // point light 4
-        ourModelShader.setVec3("pointLights[3].ambient", 0.05f, 0.05f, 0.05f);
-        ourModelShader.setVec3("pointLights[3].diffuse", 0.8f, 0.8f, 0.8f);
-        ourModelShader.setVec3("pointLights[3].specular", 1.0f, 1.0f, 1.0f);
-        ourModelShader.setVec3("pointLights[3].position", pointLightPositions[3]);
-        ourModelShader.setFloat("pointLights[3].constant", 1.0f);
-        ourModelShader.setFloat("pointLights[3].linear", 0.09f);
-        ourModelShader.setFloat("pointLights[3].quadratic", 0.032f);
-        // point light 4
-        ourModelShader.setVec3("pointLights[4].ambient", 0.05f, 0.05f, 0.05f);
-        ourModelShader.setVec3("pointLights[4].diffuse", 0.8f, 0.8f, 0.8f);
-        ourModelShader.setVec3("pointLights[4].specular", 1.0f, 1.0f, 1.0f);
-        ourModelShader.setVec3("pointLights[4].position", pointLightPositions[4]);
-        ourModelShader.setFloat("pointLights[4].constant", 1.0f);
-        ourModelShader.setFloat("pointLights[4].linear", 0.09f);
-        ourModelShader.setFloat("pointLights[4].quadratic", 0.032f);
+
+        for (int i = 0; i < 5; i++)
+        {
+            ourModelShader.setVec3("pointLights[" + to_string(i) + "].position", pointLightPositions[i]);
+            ourModelShader.setVec3("pointLights[" + to_string(i) + "].ambient", 0.05f, 0.05f, 0.05f);
+            ourModelShader.setVec3("pointLights[" + to_string(i) + "].diffuse", 0.8f, 0.8f, 0.8f);
+            ourModelShader.setVec3("pointLights[" + to_string(i) + "].specular", 1.0f, 1.0f, 1.0f);
+            ourModelShader.setFloat("pointLights[" + to_string(i) + "].constant", 1.0f);
+            ourModelShader.setFloat("pointLights[" + to_string(i) + "].linear", 0.09f);
+            ourModelShader.setFloat("pointLights[" + to_string(i) + "].quadratic", 0.032f);
+        }
 
         ourModel.Draw(ourModelShader);
 
