@@ -40,6 +40,7 @@ public:
 
 	Mat4F viewMat4F(const Vec3F&,const Vec3F&,const Vec3F&);											  //Matrice di passaggio da world space a view space
 	Mat4F projectionMat4F(const float&, const float&, const float&); //Matrice per passaggio da view space a clip space
+	Mat4F orthographicMat4F(const float& left, const float& right, const float& bottom, const float& top, const float& near, const float& far);
 	Mat4F lookat(const Vec3F& from, const Vec3F& to, const Vec3F& up);
 	
 

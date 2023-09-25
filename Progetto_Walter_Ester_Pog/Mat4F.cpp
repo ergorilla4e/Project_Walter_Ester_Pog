@@ -334,6 +334,14 @@ Mat4F Mat4F::projectionMat4F(const float& angleOfView, const float& near, const 
 						0,0,- (far * near) / (far - near), 0);
 }
 
+Mat4F Mat4F::orthographicMat4F(const float& left, const float& right, const float& bottom, const float& top, const float& near, const float& far)
+{
+	return Mat4F::Mat4F(2.0f / (right - left), 0, 0, -(right + left) / (right - left),
+		0, 2.0f / (top - bottom), 0, -(top + bottom) / (top - bottom),
+		0, 0, -2.0f / (far - near), -(far + near) / (far - near),
+		0, 0, 0, 1);
+}
+
 Mat4F Mat4F::lookat(const Vec3F& from, const Vec3F& to, const Vec3F& up)
 {
 	Vec3F forward = (from - to).normalize();

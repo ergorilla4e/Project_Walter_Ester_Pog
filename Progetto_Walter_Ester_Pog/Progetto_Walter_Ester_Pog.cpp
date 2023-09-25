@@ -89,7 +89,7 @@ int main()
     //Per disegnare il cubo luminoso
     //Shader_Class lightShader("Light.vs", "Light.fs");
 
-    Shader_Class lightCubeShader("Light_Cube.vs", "Light_Cube.fs");
+    Shader_Class lightCubeShader("Light.vs", "Light.fs");
     Shader_Class ourModelShader("Model_VS.vs", "Model_FS.fs");
 
     //Model_Class ourModel("C:/Modelli/backpack/backpack.obj");
@@ -140,20 +140,7 @@ int main()
         -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  //0.0f,  1.0f
     };
 
-    //posizione dei conteinere
-   /* Vec3F cubePosition[] = {
-        Vec3F(0.0f,  0.0f,  0.0f),
-        Vec3F(2.0f,  5.0f, -15.0f),
-        Vec3F(-1.5f, -2.2f, -2.5f),
-        Vec3F(-3.8f, -2.0f, -12.3f),
-        Vec3F(2.4f, -0.4f, -3.5f),
-        Vec3F(-1.7f,  3.0f, -7.5f),
-        Vec3F(1.3f, -2.0f, -2.5f),
-        Vec3F(1.5f,  2.0f, -2.5f),
-        Vec3F(1.5f,  0.2f, -1.5f),
-        Vec3F(-1.3f,  1.0f, -1.5f)
 
-    };*/
     //posizione della luce puntiforme 
     Vec3F pointLightPositions[] = {
     Vec3F(-4.4f, 2.8f, -1.2f),
@@ -162,22 +149,7 @@ int main()
     Vec3F(7.9f, 2.8f, -9.2f),
     Vec3F(7.9f, 2.8f, 9.0f)
     };
-    //Vogliamo generare un nuovo VAO specifico per la sorgente luminosa.
-    //unsigned int VBO, cubeVAO;
-    //glGenVertexArrays(1, &cubeVAO);
-    //glGenBuffers(1, &VBO);
-    //
-    //glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    //glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-    // 
-    //glBindVertexArray(cubeVAO);
-    //
-    //glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
-    //glEnableVertexAttribArray(0);
-    //glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-    //glEnableVertexAttribArray(1);
-    //glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-    //glEnableVertexAttribArray(2);
+  
 
     unsigned int VBO, lightCubeVAO;
     glGenVertexArrays(1, &lightCubeVAO);
@@ -224,48 +196,6 @@ int main()
        //  modelShader.setMat4("projection", projection);
       //  modelShader.setMat4("view", view);
 
-        /*lightShader.use();
-        lightShader.setVec3("viewPos", camera.Posizione);
-        //proprietà dei materiali
-        lightShader.setFloat("material.shininess", 32.0f);
-        
-        lightShader.setVec3("dirLight.direction", -0.2f, -1.0f, -0.3f);
-        lightShader.setVec3("dirLight.ambient", 0.05f, 0.05f, 0.05f);
-        lightShader.setVec3("dirLight.diffuse", 0.4f, 0.4f, 0.4f);
-        lightShader.setVec3("dirLight.specular", 0.5f, 0.5f, 0.5f);
-        // point light 1
-        lightShader.setVec3("pointLights[0].position", pointLightPositions[0]);
-        lightShader.setVec3("pointLights[0].ambient", 0.05f, 0.05f, 0.05f);
-        lightShader.setVec3("pointLights[0].diffuse", 0.8f, 0.8f, 0.8f);
-        lightShader.setVec3("pointLights[0].specular", 1.0f, 1.0f, 1.0f);
-        lightShader.setFloat("pointLights[0].constant", 1.0f);
-        lightShader.setFloat("pointLights[0].linear", 0.09f);
-        lightShader.setFloat("pointLights[0].quadratic", 0.032f);
-        // point light 2
-        lightShader.setVec3("pointLights[1].position", pointLightPositions[1]);
-        lightShader.setVec3("pointLights[1].ambient", 0.05f, 0.05f, 0.05f);
-        lightShader.setVec3("pointLights[1].diffuse", 0.8f, 0.8f, 0.8f);
-        lightShader.setVec3("pointLights[1].specular", 1.0f, 1.0f, 1.0f);
-        lightShader.setFloat("pointLights[1].constant", 1.0f);
-        lightShader.setFloat("pointLights[1].linear", 0.09f);
-        lightShader.setFloat("pointLights[1].quadratic", 0.032f);
-        // point light 3
-        lightShader.setVec3("pointLights[2].position", pointLightPositions[2]);
-        lightShader.setVec3("pointLights[2].ambient", 0.05f, 0.05f, 0.05f);
-        lightShader.setVec3("pointLights[2].diffuse", 0.8f, 0.8f, 0.8f);
-        lightShader.setVec3("pointLights[2].specular", 1.0f, 1.0f, 1.0f);
-        lightShader.setFloat("pointLights[2].constant", 1.0f);
-        lightShader.setFloat("pointLights[2].linear", 0.09f);
-        lightShader.setFloat("pointLights[2].quadratic", 0.032f);
-        // point light 4
-        lightShader.setVec3("pointLights[3].ambient", 0.05f, 0.05f, 0.05f);
-        lightShader.setVec3("pointLights[3].diffuse", 0.8f, 0.8f, 0.8f);
-        lightShader.setVec3("pointLights[3].specular", 1.0f, 1.0f, 1.0f);
-        lightShader.setVec3("pointLights[3].position", pointLightPositions[3]);
-        lightShader.setFloat("pointLights[3].constant", 1.0f);
-        lightShader.setFloat("pointLights[3].linear", 0.09f);
-        lightShader.setFloat("pointLights[3].quadratic", 0.032f);
-        */
         
         //lightCubeShader.use();
 

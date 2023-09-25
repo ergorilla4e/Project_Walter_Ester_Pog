@@ -82,46 +82,10 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="VertexShader.vs">
+    <None Include="Light.vs">
       <Filter>File di risorse\Shaders</Filter>
     </None>
-    <None Include="FragmentShader.fs">
-      <Filter>File di risorse\Shaders</Filter>
-    </None>
-    <None Include="Colors.vs">
-      <Filter>File di risorse\Shaders</Filter>
-    </None>
-    <None Include="Colors.fs">
-      <Filter>File di risorse\Shaders</Filter>
-    </None>
-    <None Include="Light_Cube.vs">
-      <Filter>File di risorse\Shaders</Filter>
-    </None>
-    <None Include="Light_Cube.fs">
-      <Filter>File di risorse\Shaders</Filter>
-    </None>
-    <None Include="Model.vs">
-      <Filter>File di risorse\Shaders</Filter>
-    </None>
-    <None Include="Model.fs">
-      <Filter>File di risorse\Shaders</Filter>
-    </None>
-    <None Include="Material.fs">
-      <Filter>File di risorse\Shaders</Filter>
-    </None>
-    <None Include="Material.vs">
-      <Filter>File di risorse\Shaders</Filter>
-    </None>
-    <None Include="Lighting_Maps.vs">
-      <Filter>File di risorse\Shaders</Filter>
-    </None>
-    <None Include="Lighting_Maps.fs">
-      <Filter>File di risorse\Shaders</Filter>
-    </None>
-    <None Include="Light_Casters.vs">
-      <Filter>File di risorse\Shaders</Filter>
-    </None>
-    <None Include="Light_Casters.fs">
+    <None Include="Light.fs">
       <Filter>File di risorse\Shaders</Filter>
     </None>
     <None Include="Model_VS.vs">
@@ -138,10 +102,10 @@
     <Image Include="awesomeface.png">
       <Filter>File di risorse\Textures</Filter>
     </Image>
-    <Image Include="container2.png">
+    <Image Include="container2_specular.png">
       <Filter>File di risorse\Textures</Filter>
     </Image>
-    <Image Include="container2_specular.png">
+    <Image Include="container2.png">
       <Filter>File di risorse\Textures</Filter>
     </Image>
   </ItemGroup>

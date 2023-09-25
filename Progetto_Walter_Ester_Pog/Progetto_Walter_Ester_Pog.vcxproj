@@ -153,22 +153,10 @@
     <ClInclude Include="Vec4F.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Colors.fs" />
-    <None Include="Colors.vs" />
-    <None Include="FragmentShader.fs" />
     <None Include="Model_FS.fs" />
     <None Include="Model_VS.vs" />
-    <None Include="Lighting_Maps.fs" />
-    <None Include="Lighting_Maps.vs" />
-    <None Include="Light_Casters.fs" />
-    <None Include="Light_Casters.vs" />
-    <None Include="Light_Cube.fs" />
-    <None Include="Light_Cube.vs" />
-    <None Include="Material.fs" />
-    <None Include="Material.vs" />
-    <None Include="Model.fs" />
-    <None Include="Model.vs" />
-    <None Include="VertexShader.vs" />
+    <None Include="Light.fs" />
+    <None Include="Light.vs" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="awesomeface.png" />
