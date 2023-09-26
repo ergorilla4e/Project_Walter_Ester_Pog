@@ -157,6 +157,9 @@
     <None Include="Model_VS.vs" />
     <None Include="Light.fs" />
     <None Include="Light.vs" />
+    <None Include="point_shadow_depth.fs" />
+    <None Include="point_shadow_depth.gs" />
+    <None Include="point_shadow_depth.vs" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="awesomeface.png" />

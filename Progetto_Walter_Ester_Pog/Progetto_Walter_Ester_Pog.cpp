@@ -15,10 +15,13 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void processInput(GLFWwindow* window);
+void renderScene(Shader_Class& shader,Model_Class& model);
 
 // Impostazioni
 const unsigned int SCR_WIDTH = 1920;
 const unsigned int SCR_HEIGHT = 1080;
+bool shadows = true;
+bool shadowsKeyPressed = false;
 
 // camera
 Camera_Class camera(Vec3F(0.0f, 1.5f, 3.0f));
@@ -30,17 +33,12 @@ float deltaTime = 0.0f;	// Time between current frame and last frame
 float lastFrame = 0.0f; // Time of last frame
 //Illuminazione
 //appresenta la posizione della sorgente luminosa nelle coordinate dello spazio mondiale
-Vec3F lightPos(0.0f, 0.0f, 0.0f);
+Vec3F lightPos(0.0f, 2.0f, 0.0f);
 
 int main()
 {
-    // Apri il file "base.fs" in modalità lettura
-    //ifstream theFile("base.fs");
-
-    // PROVE DI LIBRERIA ALGEBRA LINEARE
-
-    // Creazione di un vettore di 4 elementi con valori specifici
-    Vec4F vettore = { 0.1f,0.1f,0.1f,1.0f };
+  
+    Vec4F coloreSfondo = { 0.1f,0.1f,0.1f,1.0f };
     camera.VelocitaMovimento = 5.f;
     //----------------------------------
 
@@ -80,64 +78,91 @@ int main()
         return -1;
     }
 
-    // Shader_Class shader("VertexShader.vs", "FragmentShader.fs");
-    stbi_set_flip_vertically_on_load(true);
 
     glEnable(GL_DEPTH_TEST);
-    //Per disegnare il cubo colarato
-   // Shader_Class modelShader("Model.vs", "Model.fs");
-    //Per disegnare il cubo luminoso
-    //Shader_Class lightShader("Light.vs", "Light.fs");
+    glEnable(GL_CULL_FACE);
 
     Shader_Class lightCubeShader("Light.vs", "Light.fs");
     Shader_Class ourModelShader("Model_VS.vs", "Model_FS.fs");
+    Shader_Class simpleDepthShader("point_shadow_depth.vs", "point_shadow_depth.fs", "point_shadow_depth.gs");
 
     //Model_Class ourModel("C:/Modelli/backpack/backpack.obj");
     Model_Class ourModel("C:/Modelli/Map/Gallery_Nom_04.obj");
 
+    // configure depth map FBO
+    // -----------------------
+    const unsigned int SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;
+    unsigned int depthMapFBO;
+    glGenFramebuffers(1, &depthMapFBO);
+    // create depth cubemap texture
+    unsigned int depthCubemap;
+    glGenTextures(1, &depthCubemap);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, depthCubemap);
+    for (unsigned int i = 0; i < 6; ++i)
+        glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_DEPTH_COMPONENT, SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+    // attach depth texture as FBO's depth buffer
+    glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+    glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, depthCubemap, 0);
+    glDrawBuffer(GL_NONE);
+    glReadBuffer(GL_NONE);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+
+    // shader configuration
+    // --------------------
+    ourModelShader.use();
+    ourModelShader.setInt("material.diffuse", 0);
+    //ourModelShader.setInt("material.specular", 1);
+    ourModelShader.setInt("depthMap", 1);
+
     float vertices[] = {
-        // positions          // normals           // texture coords
-        -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  //0.0f,  0.0f,
-         0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  //1.0f,  0.0f,
-         0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  //1.0f,  1.0f,
-         0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  //1.0f,  1.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  //0.0f,  1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  //0.0f,  0.0f,
-                                                   //
-        -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  //0.0f,  0.0f,
-         0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  //1.0f,  0.0f,
-         0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  //1.0f,  1.0f,
-         0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  //1.0f,  1.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  //0.0f,  1.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  //0.0f,  0.0f,
-                                                   //
-        -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  //1.0f,  0.0f,
-        -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  //1.0f,  1.0f,
-        -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  //0.0f,  1.0f,
-        -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  //0.0f,  1.0f,
-        -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  //0.0f,  0.0f,
-        -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  //1.0f,  0.0f,
-                                                   //
-         0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  //1.0f,  0.0f,
-         0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  //1.0f,  1.0f,
-         0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  //0.0f,  1.0f,
-         0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  //0.0f,  1.0f,
-         0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  //0.0f,  0.0f,
-         0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  //1.0f,  0.0f,
-                                                   //
-        -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  //0.0f,  1.0f,
-         0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  //1.0f,  1.0f,
-         0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  //1.0f,  0.0f,
-         0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  //1.0f,  0.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  //0.0f,  0.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  //0.0f,  1.0f,
-                                                   //
-        -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  //0.0f,  1.0f,
-         0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  //1.0f,  1.0f,
-         0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  //1.0f,  0.0f,
-         0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  //1.0f,  0.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  //0.0f,  0.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  //0.0f,  1.0f
+        // positions          // normals         
+        -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+         0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+         0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+         0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+                                                 
+        -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+         0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+         0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+         0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+                                                 
+        -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+        -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+        -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+        -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+        -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+        -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+                                                 
+         0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+         0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+         0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+         0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+         0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+         0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+                                                 
+        -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+         0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+         0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+         0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+                                                 
+        -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
+         0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
+         0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+         0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f
     };
 
 
@@ -150,29 +175,19 @@ int main()
     Vec3F(7.9f, 2.8f, 9.0f)
     };
   
-
     unsigned int VBO, lightCubeVAO;
     glGenVertexArrays(1, &lightCubeVAO);
     glGenBuffers(1, &VBO);
-
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
     glBindVertexArray(lightCubeVAO);
-
-    //glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
-    //caricamento della texture 
-    //unsigned int texture1, texture2;
-    //Texture_Class textureClass(1);
-    //textureClass.calcoloTexture("container2.png", true, false, GL_REPEAT, GL_LINEAR, &texture1);
-    //textureClass.calcoloTexture("container2_specular.png", true, false, GL_REPEAT, GL_LINEAR, &texture2);
+    
+    Mat4F matriceConti = Mat4F();
+    Mat4F projectionCamera = Mat4F();
+    Mat4F view = Mat4F();
 
-    //Configurazione shader
-    ourModelShader.use();
-    ourModelShader.setInt("material.diffuse", 0);
-    ourModelShader.setInt("material.specular", 1);
     // Ciclo di rendering
     // -----------
     while (!glfwWindowShouldClose(window))
@@ -188,52 +203,62 @@ int main()
 
         // Rendering
         // ------
-        glClearColor(vettore.x, vettore.y, vettore.z, vettore.w);
+        glClearColor(coloreSfondo.x, coloreSfondo.y, coloreSfondo.z, coloreSfondo.w);
         // glClear(GL_COLOR_BUFFER_BIT);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        //modelShader.use()
-       //  modelShader.setMat4("projection", projection);
-      //  modelShader.setMat4("view", view);
-
+        pointLightPositions[0].z = static_cast<float>(sin(glfwGetTime() * 0.5) * 3.0);
+        // 0. create depth cubemap transformation matrices
+// -----------------------------------------------
+        float far_plane = 25.0f;
+        Mat4F shadowProj = shadowProj.projectionMat4F(90.0f, (float)SHADOW_WIDTH / (float)SHADOW_HEIGHT, far_plane);
+        std::vector<Mat4F> shadowTransforms;
         
-        //lightCubeShader.use();
+            shadowTransforms.push_back(shadowProj * matriceConti.lookat(lightPos, lightPos + Vec3F(1.0f, 0.0f, 0.0f), Vec3F(0.0f, -1.0f, 0.0f)));
+            shadowTransforms.push_back(shadowProj * matriceConti.lookat(lightPos, lightPos + Vec3F(-1.0f, 0.0f, 0.0f), Vec3F(0.0f, -1.0f, 0.0f)));
+            shadowTransforms.push_back(shadowProj * matriceConti.lookat(lightPos, lightPos + Vec3F(0.0f, 1.0f, 0.0f), Vec3F(0.0f, 0.0f, 1.0f)));
+            shadowTransforms.push_back(shadowProj * matriceConti.lookat(lightPos, lightPos + Vec3F(0.0f, -1.0f, 0.0f), Vec3F(0.0f, 0.0f, -1.0f)));
+            shadowTransforms.push_back(shadowProj * matriceConti.lookat(lightPos, lightPos + Vec3F(0.0f, 0.0f, 1.0f), Vec3F(0.0f, -1.0f, 0.0f)));
+            shadowTransforms.push_back(shadowProj * matriceConti.lookat(lightPos, lightPos + Vec3F(0.0f, 0.0f, -1.0f), Vec3F(0.0f, -1.0f, 0.0f)));
 
-        //view/projection trasformation 
-        Mat4F projection = projection.projectionMat4F(camera.Zoom, (float)SCR_WIDTH / (float)SCR_HEIGHT, 100.0f);
-        Mat4F view = camera.GetMatriceVisualizzazione();
 
-        //view = view.transpose(view);
-        //lightShader.setMat4("projection", projection);
-        //lightShader.setMat4("view", view);
-        //trasformazioni globali
-        //model = model.rotationZ(model, 30.0f);
-        //lightShader.setMat4("model", model);
+            // 1. render scene to depth cubemap
+    // --------------------------------
+            glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+            glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+            glClear(GL_DEPTH_BUFFER_BIT);
+            simpleDepthShader.use();
+            for (unsigned int i = 0; i < 6; ++i)
+                simpleDepthShader.setMat4("shadowMatrices[" + std::to_string(i) + "]", shadowTransforms[i]);
+            simpleDepthShader.setFloat("far_plane", far_plane);
+            simpleDepthShader.setVec3("lightPos", lightPos);
+            renderScene(simpleDepthShader, ourModel);
+            glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-        //glActiveTexture(GL_TEXTURE0);
-        //glBindTexture(GL_TEXTURE_2D, texture1); 
-        //glActiveTexture(GL_TEXTURE1);
-        //glBindTexture(GL_TEXTURE_2D, texture2);
-        //// render del cubo
-        //glBindVertexArray(cubeVAO);
-       
-
-       /* for (unsigned int i = 0; i < 10; i++)
-        {
-            Mat4F model = Mat4F(1.0f);
-            model = model.translation(model, cubePosition[i].x,cubePosition[i].y, cubePosition[i].z);
-            float angle = 20.0f * i;
-            model = model.rotateAllAxis(model, angle, Vec3F(1.0f, 0.3f, 0.5f));
-            lightShader.setMat4("model", model);
-            glDrawArrays(GL_TRIANGLES, 0, 36);
-        }*/
-
+            // 2. render scene as normal 
+    // -------------------------
+            glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            ourModelShader.use();
+            projectionCamera = projectionCamera.projectionMat4F(camera.Zoom, (float)SCR_WIDTH / (float)SCR_HEIGHT, 100.0f);
+            Mat4F view = camera.GetMatriceVisualizzazione();
+            ourModelShader.setMat4("projection", projectionCamera);
+            ourModelShader.setMat4("view", view);
+            // set lighting uniforms
+            ourModelShader.setVec3("lightPos", lightPos);
+            ourModelShader.setVec3("viewPos", camera.Posizione);
+            ourModelShader.setInt("shadows", shadows); // enable/disable shadows by pressing 'SPACE'
+            ourModelShader.setFloat("far_plane", far_plane);
+            glActiveTexture(GL_TEXTURE1);
+            glBindTexture(GL_TEXTURE_CUBE_MAP, depthCubemap);
+            renderScene(ourModelShader, ourModel);
+        
 
         //Disegno dell'oggetto lampada
         lightCubeShader.use();
-        lightCubeShader.setMat4("projection", projection);
+        lightCubeShader.setMat4("projection", projectionCamera);
         lightCubeShader.setMat4("view", view);
         glBindVertexArray(lightCubeVAO);
+
         for (unsigned int i = 0; i < 5; i++)
         {
             Mat4F modelLight = Mat4F(1.0f);
@@ -245,7 +270,7 @@ int main()
 
         Mat4F modelObject = Mat4F(1.0f);
         ourModelShader.use();
-        ourModelShader.setMat4("projection", projection);
+        ourModelShader.setMat4("projection", projectionCamera);
         ourModelShader.setMat4("view", view);
 
         modelObject = modelObject.scaling(modelObject, 0.008f);
@@ -324,7 +349,16 @@ void processInput(GLFWwindow* window)
         cout << camera.Posizione << endl;
     }
 
-    
+    if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS && !shadowsKeyPressed)
+    {
+        shadows = !shadows;
+        shadowsKeyPressed = true;
+    }
+    if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_RELEASE)
+    {
+        shadowsKeyPressed = false;
+    }
+
 }
 
 // glfw: ogni volta che la dimensione della finestra cambia (per resize dell'OS o dell'utente), questa funzione di callback viene eseguita
@@ -359,4 +393,13 @@ void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
     camera.ProcessMouseScroll(static_cast<float>(yoffset));
+}
+
+void renderScene(Shader_Class& shader,Model_Class& model)
+{
+    Mat4F modelObject = Mat4F(1.0f);
+    modelObject = modelObject.scaling(modelObject, 0.008f);
+    shader.setMat4("model", modelObject);
+    model.Draw(shader);
+
 }

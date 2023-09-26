@@ -94,6 +94,15 @@
     <None Include="Model_FS.fs">
       <Filter>File di risorse\Shaders</Filter>
     </None>
+    <None Include="point_shadow_depth.vs">
+      <Filter>File di risorse\Shaders</Filter>
+    </None>
+    <None Include="point_shadow_depth.fs">
+      <Filter>File di risorse\Shaders</Filter>
+    </None>
+    <None Include="point_shadow_depth.gs">
+      <Filter>File di risorse\Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Image Include="container.jpg">
