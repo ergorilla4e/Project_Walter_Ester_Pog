@@ -25,7 +25,7 @@ struct PointLight {
     vec3 specular;
 };
 
-#define NR_POINT_LIGHTS 5
+#define NR_POINT_LIGHTS 1
 
 in vec3 FragPos;
 in vec3 Normal;
@@ -159,7 +159,7 @@ void main()
     vec3 norm = normalize(Normal);
     vec3 viewDir = normalize(viewPos - FragPos);
    
-    float shadow = ShadowCalculation(FragPos); // Calcolo delle ombre
+    float shadow = shadows ? ShadowCalculation(FragPos) : 0.0;     
     
     vec3 result;
     

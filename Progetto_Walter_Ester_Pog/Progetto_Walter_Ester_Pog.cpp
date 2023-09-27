@@ -82,7 +82,7 @@ int main()
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 
-	Shader_Class lightCubeShader("Light.vs", "Light.fs");
+	//Shader_Class lightCubeShader("Light.vs", "Light.fs");
 	Shader_Class ourModelShader("Model_VS.vs", "Model_FS.fs");
 	Shader_Class simpleDepthShader("point_shadow_depth.vs", "point_shadow_depth.fs", "point_shadow_depth.gs");
 
@@ -279,7 +279,6 @@ int main()
 
 		ourModelShader.setMat4("model", modelObject);
 
-		//ourModelShader.use();
 		ourModelShader.setVec3("viewPos", camera.Posizione);
 
 		//proprietà dei materiali
@@ -293,12 +292,12 @@ int main()
 		for (int i = 0; i < 5; i++)
 		{
 			ourModelShader.setVec3("pointLights[" + to_string(i) + "].position", pointLightPositions[i]);
-			ourModelShader.setVec3("pointLights[" + to_string(i) + "].ambient", 0.05f, 0.05f, 0.05f);
+			ourModelShader.setVec3("pointLights[" + to_string(i) + "].ambient", 0.5f, 0.5f, 0.5f);
 			ourModelShader.setVec3("pointLights[" + to_string(i) + "].diffuse", 0.8f, 0.8f, 0.8f);
 			ourModelShader.setVec3("pointLights[" + to_string(i) + "].specular", 1.0f, 1.0f, 1.0f);
 			ourModelShader.setFloat("pointLights[" + to_string(i) + "].constant", 1.0f);
-			ourModelShader.setFloat("pointLights[" + to_string(i) + "].linear", 0.09f);
-			ourModelShader.setFloat("pointLights[" + to_string(i) + "].quadratic", 0.032f);
+			ourModelShader.setFloat("pointLights[" + to_string(i) + "].linear", 0.04f);
+			ourModelShader.setFloat("pointLights[" + to_string(i) + "].quadratic", 0.02f);
 		}
 
 		ourModel.Draw(ourModelShader);
