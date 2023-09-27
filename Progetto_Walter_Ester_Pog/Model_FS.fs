@@ -14,9 +14,7 @@ struct DirLight {
     vec3 specular;
 };
 
-struct PointLight {
-    vec3 position;
-    
+struct PointLight {    
     float constant;
     float linear;
     float quadratic;
@@ -96,12 +94,12 @@ vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir, float shadow)
 
 vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir, float shadow)
 {
-    vec3 lightDir = normalize(light.position - fragPos);
+    vec3 lightDir = normalize(lightPos - fragPos);
     
     float diff = max(dot(normal, lightDir), 0.0);
     float spec = pow(max(dot(viewDir, reflect(-lightDir, normal)), 0.0), material.shininess);
     
-    float distance = length(light.position - fragPos);
+    float distance = length(lightPos - fragPos);
     float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
     
     vec3 ambient = light.ambient * vec3(texture(material.diffuse, TexCoords));
@@ -133,14 +131,14 @@ vec3 CalcDirLightBlinn(DirLight light, vec3 normal, vec3 viewDir, float shadow)
 
 vec3 CalcPointLightBlinn(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir, float shadow)
 {
-    vec3 lightDir = normalize(light.position - fragPos);
+    vec3 lightDir = normalize(lightPos - fragPos);
     
     vec3 halfwayDir = normalize(lightDir + viewDir);
     
     float diff = max(dot(normal, lightDir), 0.0);
     float spec = pow(max(dot(normal, halfwayDir), 0.0), material.shininess);
    
-    float distance = length(light.position - fragPos);
+    float distance = length(lightPos - fragPos);
     float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));    
    
     vec3 ambient = light.ambient * vec3(texture(material.diffuse, TexCoords));
