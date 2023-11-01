@@ -134,6 +134,8 @@
     <ClCompile Include="Mat4F.cpp" />
     <ClCompile Include="Progetto_Walter_Ester_Pog.cpp" />
     <ClCompile Include="Quaternion.cpp" />
+    <ClCompile Include="VAO.cpp" />
+    <ClCompile Include="VBO.cpp" />
     <ClCompile Include="Vec2F.cpp" />
     <ClCompile Include="Vec3F.cpp" />
     <ClCompile Include="Vec4F.cpp" />
@@ -148,15 +150,16 @@
     <ClInclude Include="Shader_Class.h" />
     <ClInclude Include="stb_image.h" />
     <ClInclude Include="Texture_Class.h" />
+    <ClInclude Include="VAO.h" />
+    <ClInclude Include="VBO.h" />
     <ClInclude Include="Vec2F.h" />
     <ClInclude Include="Vec3F.h" />
     <ClInclude Include="Vec4F.h" />
+    <ClInclude Include="View_Class.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Model_FS.fs" />
     <None Include="Model_VS.vs" />
-    <None Include="Light.fs" />
-    <None Include="Light.vs" />
     <None Include="point_shadow_depth.fs" />
     <None Include="point_shadow_depth.gs" />
     <None Include="point_shadow_depth.vs" />

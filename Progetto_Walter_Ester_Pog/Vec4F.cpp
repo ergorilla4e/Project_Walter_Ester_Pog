@@ -1,5 +1,6 @@
 #include "Generale.h"
 
+
 Vec4F::Vec4F() : x(), y(), z(), w() {}
 
 Vec4F::Vec4F(float val, float valW) : x(val), y(val), z(val), w(valW) {}

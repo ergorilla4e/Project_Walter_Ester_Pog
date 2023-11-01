@@ -1,5 +1,6 @@
 #pragma once
-#include "Generale.h"
+#ifndef VEC3F_H
+#define VEC3F_H
 
 class Vec3F
 {
@@ -42,3 +43,4 @@ public:
 ostream& operator<<(ostream&, const Vec3F&);	//Stampa in sequenza Vec3F
 Vec3F operator*(float, const Vec3F&);			//Moltiplica in sequenza prodotti per scalari
 
+#endif

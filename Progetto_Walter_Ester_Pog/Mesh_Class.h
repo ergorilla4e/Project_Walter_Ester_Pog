@@ -2,7 +2,6 @@
 #ifndef MESH_CLASS_H
 #define MESH_CLASS_H
 
-
 #define MAX_BONE_INFLUENCE 4
 
 struct Vertex {

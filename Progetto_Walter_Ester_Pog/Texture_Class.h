@@ -2,8 +2,6 @@
 #ifndef TEXTURE_H
 #define TEXTURE_H
 
-#include "Generale.h"
-
 class Texture_Class
 {
     int Texture;

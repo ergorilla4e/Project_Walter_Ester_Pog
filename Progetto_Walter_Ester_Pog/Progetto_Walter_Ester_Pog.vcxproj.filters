@@ -42,6 +42,12 @@
     <ClCompile Include="Vec2F.cpp">
       <Filter>File di origine</Filter>
     </ClCompile>
+    <ClCompile Include="VBO.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="VAO.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Generale.h">
@@ -80,14 +86,17 @@
     <ClInclude Include="Texture_Class.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
+    <ClInclude Include="VBO.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="VAO.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="View_Class.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Light.vs">
-      <Filter>File di risorse\Shaders</Filter>
-    </None>
-    <None Include="Light.fs">
-      <Filter>File di risorse\Shaders</Filter>
-    </None>
     <None Include="Model_VS.vs">
       <Filter>File di risorse\Shaders</Filter>
     </None>

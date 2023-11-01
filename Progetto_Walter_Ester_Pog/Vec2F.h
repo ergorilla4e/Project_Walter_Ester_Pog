@@ -1,4 +1,7 @@
 #pragma once
+#ifndef VEC2F_H
+#define VEC2F_H
+
 #include "Generale.h"
 
 class Vec2F
@@ -38,3 +41,5 @@ public:
 
 ostream& operator<<(ostream&, const Vec2F&);      // Stampa in sequenza Vec2F
 Vec2F operator*(float, const Vec2F&);             // Moltiplica in sequenza prodotti per scalari
+
+#endif

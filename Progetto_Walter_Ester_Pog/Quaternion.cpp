@@ -1,4 +1,4 @@
-#include "Generale.h"
+#include "Quaternion.h"
 
 Quaternion::Quaternion(float w = 0.f, float x = 0.f, float y = 0.f, float z = 0.f) : m_w(w), m_x(x), m_y(y), m_z(z) {}
 

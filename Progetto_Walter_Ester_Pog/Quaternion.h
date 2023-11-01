@@ -1,4 +1,7 @@
 #pragma once
+#ifndef QUATERNION_H
+#define QUATERNION_H
+
 #include "Generale.h"
 
 class Quaternion
@@ -30,3 +33,5 @@ public:
 };
 
 std::ostream& operator<<(std::ostream&, const Quaternion&);
+
+#endif
