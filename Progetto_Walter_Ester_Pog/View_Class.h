@@ -31,7 +31,7 @@ float deltaTime = 0.0f;	//Time between current frame and last frame
 float lastFrame = 0.0f; //Time of last frame
 
 //Illuminazione
-//appresenta la posizione della sorgente luminosa nelle coordinate del world space
+//rappresenta la posizione della sorgente luminosa nelle coordinate del world space
 Vec3F lightPos(5.0f, 2.0f, 0.0f);
 
 //rappresentano le scale degli oggetti di scena
