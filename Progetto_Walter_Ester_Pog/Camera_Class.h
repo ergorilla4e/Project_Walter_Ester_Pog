@@ -2,8 +2,7 @@
 #ifndef CAMERA_CLASS_H
 #define CAMERA_CLASS_H
 
-
-// Definisce diverse opzioni possibili per il movimento della telecamera. Usate come astrazione per rimanere indipendenti dai metodi specifici di input del sistema di finestra.
+// Definisce diverse opzioni possibili per il movimento della telecamera.
 enum Camera_Movement {
     AVANTI,
     INDIETRO,
@@ -12,17 +11,15 @@ enum Camera_Movement {
 };
 
 // Valori predefiniti della telecamera
-const float YAW = -90.0f;
-const float PITCH = 0.0f;
+const float YAW = -90.0f; //Rotaziione l'ungo l'asse Y
+const float PITCH = 0.0f; //Rotazione lungo l'asse X
 const float VELOCITA = 2.5f;
 const float SENSIBILITA_MOUSE = 0.1f;
 const float ZOOM = 45.0f;
 
-// Una classe di telecamera astratta che elabora l'input e calcola gli angoli di Eulero, i vettori e le matrici corrispondenti per l'uso in OpenGL.
 class Camera_Class
 {
 public:
-
     // Attributi della telecamera
     Vec3F Posizione;
     Vec3F Fronte;
@@ -64,7 +61,7 @@ public:
         return matrice.lookat(Posizione, Posizione + Fronte, Su);
     }
 
-    // Elabora l'input ricevuto da un sistema di input simile a una tastiera. Accetta il parametro di input nel formato ENUM definito dalla telecamera (per astrarsi dai sistemi di finestre)
+    // Elabora l'input ricevuto da tastiera. 
     void ProcessKeyboard(Camera_Movement direzione, float deltaTime)
     {
         float velocita = VelocitaMovimento * deltaTime;
@@ -78,7 +75,7 @@ public:
             Posizione += Destra * velocita;
     }
 
-    // Elabora l'input ricevuto da un sistema di input del mouse. Si aspetta il valore di offset sia nella direzione x che y.
+    // Elabora l'input ricevuto dal mouse.
     void ProcessMouseMovement(float xoffset, float yoffset, bool limitaPitch = true)
     {
         xoffset *= SensibilitaMouse;
@@ -100,7 +97,7 @@ public:
         AggiornaVettoriTelecamera();
     }
 
-    // Elabora l'input ricevuto da un evento di scorrimento della rotella del mouse. Richiede solo l'input sull'asse verticale della rotella del mouse.
+    // Elabora l'input ricevuto da un evento di scorrimento della rotella del mouse. 
     void ProcessMouseScroll(float yoffset)
     {
         Zoom -= (float)yoffset;
