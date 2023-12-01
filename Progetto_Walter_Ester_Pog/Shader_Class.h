@@ -3,53 +3,55 @@
 #ifndef SHADER_H
 #define SHADER_H
 
+using namespace std;
+
 class Shader_Class
 {
 public:
     unsigned int ID;
     unsigned int geometry;
 
-    Shader_Class(std::string vs, std::string fs, std::string gs = "")
+    Shader_Class(string vs, string fs, string gs = "")
     {
-        std::string vertexCode;
-        std::string fragmentCode;
-        std::string geometryCode;
-        std::ifstream vShaderFile;
-        std::ifstream fShaderFile;
-        std::ifstream gShaderFile;
+        string vertexCode;
+        string fragmentCode;
+        string geometryCode;
+        ifstream vShaderFile;
+        ifstream fShaderFile;
+        ifstream gShaderFile;
 
-        // ensure ifstream objects can throw exceptions:
-        vShaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
-        fShaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
-        gShaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+        // assicura che gli oggetti ifstream possano generare eccezioni
+        vShaderFile.exceptions(ifstream::failbit | ifstream::badbit);
+        fShaderFile.exceptions(ifstream::failbit | ifstream::badbit);
+        gShaderFile.exceptions(ifstream::failbit | ifstream::badbit);
         try
         {
-            // open files
+            // apri i file
             vShaderFile.open(vs);
             fShaderFile.open(fs);
-            std::stringstream vShaderStream, fShaderStream;
-            // read file's buffer contents into streams
+            stringstream vShaderStream, fShaderStream;
+            // leggi i contenuti del buffer del file nelle stringhe
             vShaderStream << vShaderFile.rdbuf();
             fShaderStream << fShaderFile.rdbuf();
-            // close file handlers
+            // chiudi gli handler dei file
             vShaderFile.close();
             fShaderFile.close();
-            // convert stream into string
+            // converte gli stream in stringhe
             vertexCode = vShaderStream.str();
             fragmentCode = fShaderStream.str();
 
             if (gs != "")
             {
                 gShaderFile.open(gs);
-                std::stringstream gShaderStream;
+                stringstream gShaderStream;
                 gShaderStream << gShaderFile.rdbuf();
                 gShaderFile.close();
                 geometryCode = gShaderStream.str();
             }
         }
-        catch (std::ifstream::failure e)
+        catch (ifstream::failure e)
         {
-            std::cout << "ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ" << std::endl;
+            cout << "ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ" << endl;
         }
         const char* vShaderCode = vertexCode.c_str();
         const char* fShaderCode = fragmentCode.c_str();
@@ -97,51 +99,51 @@ public:
         glUseProgram(ID);
     }
 
-    void setBool(const std::string& name, bool value) const
+    void setBool(const string& name, bool value) const
     {
         glUniform1i(glGetUniformLocation(ID, name.c_str()), (int)value);
     }
-    void setInt(const std::string& name, int value) const
+    void setInt(const string& name, int value) const
     {
         glUniform1i(glGetUniformLocation(ID, name.c_str()), value);
     }
-    void setFloat(const std::string& name, float value) const
+    void setFloat(const string& name, float value) const
     {
         glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
     }
-    void setVec2(const std::string& name, const Vec2F& value) const
+    void setVec2(const string& name, const Vec2F& value) const
     {
         glUniform2fv(glGetUniformLocation(ID, name.c_str()), 1, &value.x);
     }
-    void setVec2(const std::string& name, float x, float y) const
+    void setVec2(const string& name, float x, float y) const
     {
         glUniform2f(glGetUniformLocation(ID, name.c_str()), x, y);
     }
-    void setVec3(const std::string& name, const Vec3F& value) const
+    void setVec3(const string& name, const Vec3F& value) const
     {
         glUniform3fv(glGetUniformLocation(ID, name.c_str()), 1, &value.x);
     }
-    void setVec3(const std::string& name, float x, float y, float z) const
+    void setVec3(const string& name, float x, float y, float z) const
     {
         glUniform3f(glGetUniformLocation(ID, name.c_str()), x, y, z);
     }
-    void setVec4(const std::string& name, const Vec4F& value) const
+    void setVec4(const string& name, const Vec4F& value) const
     {
         glUniform4fv(glGetUniformLocation(ID, name.c_str()), 1, &value.x);
     }
-    void setVec4(const std::string& name, float x, float y, float z, float w) const
+    void setVec4(const string& name, float x, float y, float z, float w) const
     {
         glUniform4f(glGetUniformLocation(ID, name.c_str()), x, y, z, w);
     }
-    void setMat4(const std::string& name, const Mat4F& mat) const
+    void setMat4(const string& name, const Mat4F& mat) const
     {
         glUniformMatrix4fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, &mat.mat4f[0]);
     }
 
 private:
-    // utility function for checking shader compilation/linking errors.
+    // funzione di utilità per verificare errori di compilazione/linking dello shader.
     // ------------------------------------------------------------------------
-    void checkCompileErrors(unsigned int shader, std::string type)
+    void checkCompileErrors(unsigned int shader, string type)
     {
         int success;
         char infoLog[1024];
@@ -151,7 +153,7 @@ private:
             if (!success)
             {
                 glGetShaderInfoLog(shader, 1024, NULL, infoLog);
-                std::cout << "ERROR::SHADER_COMPILATION_ERROR of type: " << type << "\n" << infoLog << "\n -- --------------------------------------------------- -- " << std::endl;
+                cout << "ERROR::SHADER_COMPILATION_ERROR of type: " << type << "\n" << infoLog << "\n -- --------------------------------------------------- -- " << std::endl;
             }
         }
         else
@@ -160,7 +162,7 @@ private:
             if (!success)
             {
                 glGetProgramInfoLog(shader, 1024, NULL, infoLog);
-                std::cout << "ERROR::PROGRAM_LINKING_ERROR of type: " << type << "\n" << infoLog << "\n -- --------------------------------------------------- -- " << std::endl;
+                cout << "ERROR::PROGRAM_LINKING_ERROR of type: " << type << "\n" << infoLog << "\n -- --------------------------------------------------- -- " << std::endl;
             }
         }
     }

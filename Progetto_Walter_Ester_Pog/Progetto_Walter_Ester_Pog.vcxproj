@@ -133,8 +133,6 @@
     <ClCompile Include="glad.c" />
     <ClCompile Include="Mat4F.cpp" />
     <ClCompile Include="Progetto_Walter_Ester_Pog.cpp" />
-    <ClCompile Include="VAO.cpp" />
-    <ClCompile Include="VBO.cpp" />
     <ClCompile Include="Vec2F.cpp" />
     <ClCompile Include="Vec3F.cpp" />
     <ClCompile Include="Vec4F.cpp" />
@@ -147,8 +145,6 @@
     <ClInclude Include="Model_Class.h" />
     <ClInclude Include="Shader_Class.h" />
     <ClInclude Include="stb_image.h" />
-    <ClInclude Include="VAO.h" />
-    <ClInclude Include="VBO.h" />
     <ClInclude Include="Vec2F.h" />
     <ClInclude Include="Vec3F.h" />
     <ClInclude Include="Vec4F.h" />

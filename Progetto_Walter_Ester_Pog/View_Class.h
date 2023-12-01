@@ -4,9 +4,6 @@
 #include "Mesh_Class.h"
 #include "Model_Class.h"
 
-#include "VAO.h"
-#include "VBO.h"
-
 using namespace std;
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);

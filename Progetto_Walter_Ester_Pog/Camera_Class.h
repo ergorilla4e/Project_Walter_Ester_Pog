@@ -128,28 +128,3 @@ private:
 };
 
 #endif
-
-
-//  Position: Questo attributo rappresenta la posizione della telecamera nello spazio tridimensionale.
-//            È un vettore tridimensionale che indica la posizione(coordinate x, y e z) della telecamera.
-//
-//  Front : Questo vettore indica la direzione in cui la telecamera sta guardando.Di solito è orientato verso 
-//          l'avanti rispetto alla posizione della telecamera.
-//
-//  Up : Questo vettore indica la direzione "verso l'alto" nel mondo tridimensionale.È utilizzato per definire 
-//       l'orientamento verticale della telecamera.
-//
-//  Right : Questo vettore rappresenta la direzione "verso destra" rispetto alla posizione della telecamera.
-//          È calcolato in base ai vettori Front e Up.
-//
-//  WorldUp : Questo vettore indica la direzione "verso l'alto" nel mondo globale.Di solito è lungo l'asse Y.
-//
-//  Yaw e Pitch : Questi due angoli rappresentano l'orientamento della telecamera. 
-//                Yaw indica la rotazione orizzontale della telecamera intorno all'asse verticale (guardare da sinistra a destra),
-//                mentre Pitch indica la rotazione verticale intorno all'asse orizzontale (guardare dall'alto in basso o viceversa).
-//
-//  MovementSpeed: Questo attributo controlla la velocità di movimento della telecamera.
-//
-//  MouseSensitivity : Questo attributo controlla quanto rapidamente la telecamera risponde ai movimenti del mouse.
-//
-//  Zoom : Questo attributo controlla il livello di zoom della telecamera.
