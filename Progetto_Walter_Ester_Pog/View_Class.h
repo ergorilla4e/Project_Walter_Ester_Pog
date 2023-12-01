@@ -153,7 +153,7 @@ public:
 			depthShader.use();
 
 			for (unsigned int i = 0; i < 6; ++i)
-				depthShader.setMat4("shadowMatrices[" + std::to_string(i) + "]", shadowTransforms[i]);
+				depthShader.setMat4("shadowMatrices[" + to_string(i) + "]", shadowTransforms[i]);
 
 			depthShader.setFloat("far_plane", far_plane);
 			depthShader.setVec3("lightPos", lightPos);

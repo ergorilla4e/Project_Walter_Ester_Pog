@@ -31,6 +31,7 @@ uniform float far_plane;
 uniform bool shadows;
 
 vec3 CalcPointLightBlinn(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir);
+float ShadowCalculation(vec3 fragPos);
 
 vec3 gridSamplingDisk[20] = vec3[]
 (
@@ -99,4 +100,4 @@ void main()
     result += CalcPointLightBlinn(pointLights, norm, FragPos, viewDir, shadow);
     
     FragColor = vec4(result, 1.0);
-}
+};

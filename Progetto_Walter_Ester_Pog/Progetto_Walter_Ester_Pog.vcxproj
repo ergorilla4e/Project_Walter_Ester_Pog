@@ -147,7 +147,6 @@
     <ClInclude Include="Model_Class.h" />
     <ClInclude Include="Shader_Class.h" />
     <ClInclude Include="stb_image.h" />
-    <ClInclude Include="Texture_Class.h" />
     <ClInclude Include="VAO.h" />
     <ClInclude Include="VBO.h" />
     <ClInclude Include="Vec2F.h" />
@@ -161,12 +160,6 @@
     <None Include="point_shadow_depth.fs" />
     <None Include="point_shadow_depth.gs" />
     <None Include="point_shadow_depth.vs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="awesomeface.png" />
-    <Image Include="container.jpg" />
-    <Image Include="container2.png" />
-    <Image Include="container2_specular.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

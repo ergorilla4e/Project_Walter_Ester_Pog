@@ -26,9 +26,6 @@ using namespace std;
 //MATRICI
 #include "Mat4F.h"
 
-//QUATERNIONI
-#include "Quaternion.h"
-
 //LIBRERIE
 #include <KHR/khrplatform.h>
 #include <GLAD/glad.h>

@@ -77,9 +77,6 @@
     <ClInclude Include="Camera_Class.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
-    <ClInclude Include="Texture_Class.h">
-      <Filter>File di intestazione</Filter>
-    </ClInclude>
     <ClInclude Include="VBO.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
@@ -106,19 +103,5 @@
     <None Include="point_shadow_depth.gs">
       <Filter>File di risorse\Shaders</Filter>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="container.jpg">
-      <Filter>File di risorse\Textures</Filter>
-    </Image>
-    <Image Include="awesomeface.png">
-      <Filter>File di risorse\Textures</Filter>
-    </Image>
-    <Image Include="container2_specular.png">
-      <Filter>File di risorse\Textures</Filter>
-    </Image>
-    <Image Include="container2.png">
-      <Filter>File di risorse\Textures</Filter>
-    </Image>
   </ItemGroup>
 </Project>
