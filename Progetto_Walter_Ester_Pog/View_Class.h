@@ -27,8 +27,8 @@ float lastX = SCR_WIDTH / 2.0f;
 float lastY = SCR_HEIGHT / 2.0f;
 bool firstMouse = true;
 
-float deltaTime = 0.0f;	//Time between current frame and last frame
-float lastFrame = 0.0f; //Time of last frame
+float deltaTime = 0.0f;	//Intervallo tra il frame corrente e l'ultimo
+float lastFrame = 0.0f; //Tempo dell'ultimo frame
 
 //Illuminazione
 //rappresenta la posizione della sorgente luminosa nelle coordinate del world space
@@ -67,7 +67,7 @@ public:
 		glEnable(GL_CULL_FACE);
 
 		Shader_Class ourModelShader("Model_VS.vs", "Model_FS.fs");
-		Shader_Class simpleDepthShader("point_shadow_depth.vs", "point_shadow_depth.fs", "point_shadow_depth.gs");
+		Shader_Class depthShader("point_shadow_depth.vs", "point_shadow_depth.fs", "point_shadow_depth.gs");
 
 		Model_Class ourModel("C:/Modelli/Map/MuseoMod.obj");
 		Model_Class alienModel("C:/Modelli/Map2/Alien/Reptile Alien Creature.obj");
@@ -75,10 +75,13 @@ public:
 		Model_Class dog("C:/Modelli/Map2/Dog/Doguinho.obj");
 		Model_Class skull("C:/Modelli/Map2/Skull/animal_skull_statuete.obj");
 
-		// configure depth map FBO
+		// Configurazione del FBO della mappa delle ombre 
 	// -------------------------------------------------------------------------------------------------------------------------
 		const unsigned int SHADOW_WIDTH = 4096, SHADOW_HEIGHT = 4096;
 		unsigned int depthMapFBO;
+		
+		glCullFace(GL_FRONT);
+
 		glGenFramebuffers(1, &depthMapFBO);
 		// create depth cubemap texture
 		unsigned int depthCubemap;
@@ -91,79 +94,22 @@ public:
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-		// attach depth texture as FBO's depth buffer
+		// Collega la texture di profondita' come il Buffer di profondita' FBO
 		glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
 		glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, depthCubemap, 0);
 		glDrawBuffer(GL_NONE);
 		glReadBuffer(GL_NONE);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-		// shader configuration
+		glCullFace(GL_BACK);
+
+			// Configurazione Matrici
 	// -------------------------------------------------------------------------------------------------------------------------
-		ourModelShader.use();
-		ourModelShader.setInt("material.specular", 0);
-		ourModelShader.setInt("material.diffuse", 0);
-		ourModelShader.setInt("depthMap", 1);
-
-		float vertices[] = {
-			// positions          // normals         
-			-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-			 0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-			 0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-			 0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-			-0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-			-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-
-			-0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-			 0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-			 0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-			 0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-			-0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-			-0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-
-			-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
-			-0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
-			-0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
-			-0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
-			-0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
-			-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
-
-			 0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
-			 0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
-			 0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
-			 0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
-			 0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
-			 0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
-
-			-0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
-			 0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
-			 0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
-			 0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
-			-0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
-			-0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
-
-			-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
-			 0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
-			 0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
-			 0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
-			-0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
-			-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f
-		};
-
-		VAO VAO_LightCube;
-		VAO_LightCube.Bind();
-
-		VBO VBO(vertices, sizeof(vertices));
-
-		VAO_LightCube.LinkVBO(VBO, 0);
-		VAO_LightCube.Unbind();
-		VBO.Unbind();
-
 		Mat4F matriceConti = Mat4F();
 		Mat4F projectionCamera = Mat4F();
 		Mat4F view = Mat4F();
 
-		// Ciclo di rendering
+			// Ciclo di rendering
 	// -------------------------------------------------------------------------------------------------------------------------
 		while (!glfwWindowShouldClose(window))
 		{
@@ -180,13 +126,16 @@ public:
 	// -------------------------------------------------------------------------------------------------------------------------
 			glClearColor(coloreSfondo.x, coloreSfondo.y, coloreSfondo.z, coloreSfondo.w);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+			// Spostamento della luce lungo l'asse X tramite funzione Sin(teta)
+	//--------------------------------------------------------------------------------------------------------------------------
 			lightPos.x = static_cast<float>(sin(glfwGetTime() * 0.7) * 9.0);
 
-			// 0. create depth cubemap transformation matrices
+			// Crea la Shadow CubeMap tramite la matrice di trasformazione
 	// -------------------------------------------------------------------------------------------------------------------------
 			float far_plane = 200.0f;
 			Mat4F shadowProj = shadowProj.projectionMat4F(90.0f, (float)SHADOW_WIDTH / (float)SHADOW_HEIGHT, far_plane);
-			std::vector<Mat4F> shadowTransforms;
+			vector<Mat4F> shadowTransforms;
 
 			shadowTransforms.push_back(shadowProj * matriceConti.lookat(lightPos, lightPos + Vec3F(1.0f, 0.0f, 0.0f), Vec3F(0.0f, -1.0f, 0.0f)));
 			shadowTransforms.push_back(shadowProj * matriceConti.lookat(lightPos, lightPos + Vec3F(-1.0f, 0.0f, 0.0f), Vec3F(0.0f, -1.0f, 0.0f)));
@@ -195,29 +144,29 @@ public:
 			shadowTransforms.push_back(shadowProj * matriceConti.lookat(lightPos, lightPos + Vec3F(0.0f, 0.0f, 1.0f), Vec3F(0.0f, -1.0f, 0.0f)));
 			shadowTransforms.push_back(shadowProj * matriceConti.lookat(lightPos, lightPos + Vec3F(0.0f, 0.0f, -1.0f), Vec3F(0.0f, -1.0f, 0.0f)));
 
-			// 1. render scene to depth cubemap
+			// Renderizza la scena della CubeMap
 	// -------------------------------------------------------------------------------------------------------------------------
 			glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
 			glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
 			glClear(GL_DEPTH_BUFFER_BIT);
 
-			simpleDepthShader.use();
+			depthShader.use();
 
 			for (unsigned int i = 0; i < 6; ++i)
-				simpleDepthShader.setMat4("shadowMatrices[" + std::to_string(i) + "]", shadowTransforms[i]);
+				depthShader.setMat4("shadowMatrices[" + std::to_string(i) + "]", shadowTransforms[i]);
 
-			simpleDepthShader.setFloat("far_plane", far_plane);
-			simpleDepthShader.setVec3("lightPos", lightPos);
+			depthShader.setFloat("far_plane", far_plane);
+			depthShader.setVec3("lightPos", lightPos);
 
-			renderModel(simpleDepthShader, ourModel, scala1, 0, rotatore1, traslatore.x + 0 / scala1, traslatore.y + 0 / scala1, traslatore.z + 0 / scala1, view, projectionCamera);
-			renderModel(simpleDepthShader, alienModel, scala2, 180, rotatore2, traslatore.x + (-4 / scala2), traslatore.y + (0 / scala2), traslatore.z + (7.5 / scala2), view, projectionCamera);
-			renderModel(simpleDepthShader, saturn, scala3, 16, rotatore3, traslatore.x + (-4.45 / scala3), traslatore.y + (1.1 / scala3), traslatore.z + (-1.25 / scala3), view, projectionCamera);
-			renderModel(simpleDepthShader, dog, scala3, 16, rotatore3, traslatore.x + (8 / scala3), traslatore.y + (0 / scala3), traslatore.z + (-8 / scala3), view, projectionCamera);
-			renderModel(simpleDepthShader, skull, scala4, -90, rotatore2, traslatore.x + (8.95 / scala4), traslatore.y + (0.7 / scala4), traslatore.z + (-1.2 / scala4), view, projectionCamera);
+			renderModel(depthShader, ourModel, scala1, 0, rotatore1, traslatore.x + 0 / scala1, traslatore.y + 0 / scala1, traslatore.z + 0 / scala1, view, projectionCamera);
+			renderModel(depthShader, alienModel, scala2, 180, rotatore2, traslatore.x + (-4 / scala2), traslatore.y + (0 / scala2), traslatore.z + (7.5 / scala2), view, projectionCamera);
+			renderModel(depthShader, saturn, scala3, 16, rotatore3, traslatore.x + (-4.45 / scala3), traslatore.y + (1.1 / scala3), traslatore.z + (-1.25 / scala3), view, projectionCamera);
+			renderModel(depthShader, dog, scala3, 0, rotatore1, traslatore.x + (8 / scala3), traslatore.y + (0 / scala3), traslatore.z + (-8 / scala3), view, projectionCamera);
+			renderModel(depthShader, skull, scala4, -90, rotatore2, traslatore.x + (8.95 / scala4), traslatore.y + (0.7 / scala4), traslatore.z + (-1.2 / scala4), view, projectionCamera);
 
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-			// 2. render scene as normal 
+			// Rendering della scena originale 
 	// -------------------------------------------------------------------------------------------------------------------------
 			glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -226,12 +175,13 @@ public:
 
 			projectionCamera = projectionCamera.projectionMat4F(camera.Zoom, (float)SCR_WIDTH / (float)SCR_HEIGHT, 100.0f);
 			Mat4F view = camera.GetMatriceVisualizzazione();
+
 			ourModelShader.setMat4("projection", projectionCamera);
 			ourModelShader.setMat4("view", view);
-			// set lighting uniforms
+			// Settiamo la luce
 			ourModelShader.setVec3("lightPos", lightPos);
 			ourModelShader.setVec3("viewPos", camera.Posizione);
-			ourModelShader.setInt("shadows", shadows); // enable/disable shadows by pressing 'SPACE'
+			ourModelShader.setInt("shadows", shadows); // Abilitiamo/Disabilitiamo le ombre 
 			ourModelShader.setFloat("far_plane", far_plane);
 
 			glActiveTexture(GL_TEXTURE1);
@@ -243,20 +193,15 @@ public:
 			renderModel(ourModelShader, dog, scala3, 0, rotatore1, traslatore.x + (8 / scala3), traslatore.y + (0 / scala3), traslatore.z + (-8 / scala3), view, projectionCamera);
 			renderModel(ourModelShader, skull, scala4, -90, rotatore2, traslatore.x + (8.95 / scala4), traslatore.y + (0.7 / scala4), traslatore.z + (-1.2 / scala4), view, projectionCamera);
 
-			// glfw: scambia i buffer e gestisci gli eventi di input (tasti premuti/rilasciati, movimenti del mouse, ecc.)
+			// scambia i buffer e gestisce i vari eventi di input 
 	// -------------------------------------------------------------------------------------------------------------------------
 			glfwSwapBuffers(window);
 			glfwPollEvents();
 		}
-
-		// Opzionale: dealloca tutte le risorse una volta che hanno terminato il loro scopo:
-	// -------------------------------------------------------------------------------------------------------------------------
-		VAO_LightCube.Delete();
-		VBO.Delete();
     };
 };
 
-// Processa tutti gli input: verifica se i tasti rilevanti sono premuti/rilasciati in questo frame e reagisci di conseguenza
+// Processa tutti gli input
 // ---------------------------------------------------------------------------------------------------------
 void processInput(GLFWwindow* window)
 {
@@ -296,14 +241,16 @@ void processInput(GLFWwindow* window)
 
 }
 
-// glfw: ogni volta che la dimensione della finestra cambia (per resize dell'OS o dell'utente), questa funzione di callback viene eseguita
+// Ogni volta che la dimensione della finestra cambia richiama la funzione 
 // ---------------------------------------------------------------------------------------------
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
-	// Assicura che il viewport corrisponda alle nuove dimensioni della finestra; nota che width e height saranno significativamente più grandi rispetto a quanto specificato su display retina.
+	// Assicura che il viewport corrisponda alle nuove dimensioni della finestra
 	glViewport(0, 0, width, height);
 }
 
+// Ogni volta che muoviamo il mouse viene richiamata la funzione
+//----------------------------------------------------------------------------------------------
 void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
 {
 	float xpos = static_cast<float>(xposIn);
@@ -317,7 +264,7 @@ void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
 	}
 
 	float xoffset = xpos - lastX;
-	float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
+	float yoffset = lastY - ypos; // Inverte l'asse delle Y relativo a Top/Bottom
 
 	lastX = xpos;
 	lastY = ypos;
@@ -325,11 +272,15 @@ void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
 	camera.ProcessMouseMovement(xoffset, yoffset);
 }
 
+// Ogni volta che usiamo la rotella del mouse viene richiamata la funzione
+//----------------------------------------------------------------------------------------------
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
 	camera.ProcessMouseScroll(static_cast<float>(yoffset));
 }
 
+// Funzione che renderizza i modelli di scena con i vari shader
+//----------------------------------------------------------------------------------------------
 void renderModel(Shader_Class& ourModelShader, Model_Class& ourModel, float scale, float angle, Vec3F rotatore, float xTrasl, float yTrasl, float zTrasl, Mat4F view, Mat4F projectionCamera)
 {
 	Mat4F modelObject = Mat4F(1.0f);
@@ -349,20 +300,13 @@ void renderModel(Shader_Class& ourModelShader, Model_Class& ourModel, float scal
 	//proprietà dei materiali
 	ourModelShader.setFloat("material.shininess", 32.0f);
 
-	ourModelShader.setVec3("dirLight.direction", -0.2f, -1.0f, -0.3f);
-	ourModelShader.setVec3("dirLight.ambient", 0.025f, 0.025f, 0.025f);
-	ourModelShader.setVec3("dirLight.diffuse", 0.2f, 0.2f, 0.2f);
-	ourModelShader.setVec3("dirLight.specular", 0.25f, 0.25f, 0.25f);
-
-	for (int i = 0; i < 1; i++)
-	{
-		ourModelShader.setVec3("pointLights[" + to_string(i) + "].ambient", 0.5f, 0.5f, 0.5f);
-		ourModelShader.setVec3("pointLights[" + to_string(i) + "].diffuse", 0.8f, 0.8f, 0.8f);
-		ourModelShader.setVec3("pointLights[" + to_string(i) + "].specular", 1.0f, 1.0f, 1.0f);
-		ourModelShader.setFloat("pointLights[" + to_string(i) + "].constant", 1.0f);
-		ourModelShader.setFloat("pointLights[" + to_string(i) + "].linear", 0.04f);
-		ourModelShader.setFloat("pointLights[" + to_string(i) + "].quadratic", 0.02f);
-	}
+	ourModelShader.setVec3("pointLights.ambient", 0.5f, 0.5f, 0.5f);
+	ourModelShader.setVec3("pointLights.diffuse", 0.8f, 0.8f, 0.8f);
+	ourModelShader.setVec3("pointLights.specular", 1.0f, 1.0f, 1.0f);
+	ourModelShader.setFloat("pointLights.constant", 1.0f);
+	ourModelShader.setFloat("pointLights.linear", 0.04f);
+	ourModelShader.setFloat("pointLights.quadratic", 0.02f);
+	
 
 	ourModel.Draw(ourModelShader);
 }
