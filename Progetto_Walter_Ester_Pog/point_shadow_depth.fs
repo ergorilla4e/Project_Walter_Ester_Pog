@@ -6,7 +6,9 @@ uniform float far_plane;
 
 void main()
 {
-    float lightDistance = length(FragPos.xyz - lightPos);
+    vec3 fragPosNorm = FragPos.xyz/FragPos.w;
+
+    float lightDistance = length(fragPosNorm - lightPos);
     
     lightDistance = lightDistance / far_plane;
     

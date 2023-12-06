@@ -302,7 +302,7 @@ void renderModel(Shader_Class& ourModelShader, Model_Class& ourModel, float scal
 	ourModelShader.setVec3("pointLights.specular", 1.0f, 1.0f, 1.0f);
 	ourModelShader.setFloat("pointLights.constant", 1.0f);
 	ourModelShader.setFloat("pointLights.linear", 0.04f);
-	ourModelShader.setFloat("pointLights.quadratic", 0.02f);
+	ourModelShader.setFloat("pointLights.quadratic", 0.01f);
 	
 
 	ourModel.Draw(ourModelShader);

@@ -16,7 +16,7 @@ struct PointLight {
     vec3 specular;
 };
 
-in vec3 FragPos;
+in vec4 FragPos;
 in vec3 Normal;
 in vec2 TexCoords;
 
@@ -89,15 +89,17 @@ vec3 CalcPointLightBlinn(PointLight light, vec3 normal, vec3 fragPos, vec3 viewD
 };
 
 void main()
-{    
+{   
+    vec3 fragPosNorm = FragPos.xyz/FragPos.w;
+
     vec3 norm = normalize(Normal);
-    vec3 viewDir = normalize(viewPos - FragPos);
+    vec3 viewDir = normalize(viewPos - fragPosNorm);
    
-    float shadow = shadows ? ShadowCalculation(FragPos) : 0.0;     
+    float shadow = shadows ? ShadowCalculation(fragPosNorm) : 0.0;     
     
     vec3 result;
     
-    result += CalcPointLightBlinn(pointLights, norm, FragPos, viewDir, shadow);
+    result += CalcPointLightBlinn(pointLights, norm, fragPosNorm, viewDir, shadow);
     
     FragColor = vec4(result, 1.0);
 };
