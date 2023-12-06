@@ -131,7 +131,7 @@ public:
 			// Crea la Shadow CubeMap tramite la matrice di trasformazione
 	// -------------------------------------------------------------------------------------------------------------------------
 			float far_plane = 200.0f;
-			Mat4F shadowProj = shadowProj.projectionMat4F(90.0f, (float)SHADOW_WIDTH / (float)SHADOW_HEIGHT, far_plane);
+			Mat4F shadowProj = shadowProj.ShadowProjectionMat4F(90.0f, (float)SHADOW_WIDTH / SHADOW_HEIGHT, far_plane);
 			vector<Mat4F> shadowTransforms;
 
 			shadowTransforms.push_back(shadowProj * matriceConti.lookat(lightPos, lightPos + Vec3F(1.0f, 0.0f, 0.0f), Vec3F(0.0f, -1.0f, 0.0f)));
@@ -170,7 +170,7 @@ public:
 
 			ourModelShader.use();
 
-			projectionCamera = projectionCamera.projectionMat4F(camera.Zoom, (float)SCR_WIDTH / (float)SCR_HEIGHT, 100.0f);
+			projectionCamera = projectionCamera.projectionMat4F(camera.Zoom, (float)SCR_WIDTH / SCR_HEIGHT, 100.0f);
 			Mat4F view = camera.GetMatriceVisualizzazione();
 
 			ourModelShader.setMat4("projection", projectionCamera);

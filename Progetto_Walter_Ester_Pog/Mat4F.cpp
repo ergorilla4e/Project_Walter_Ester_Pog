@@ -304,42 +304,26 @@ Mat4F Mat4F::rotateAllAxis(const Mat4F& model, float angle, const Vec3F& axis) {
 	Mat4F result = model * rotationMatrix;
 
 	return result;
-
 }
 
-
-Mat4F Mat4F::viewMat4F(const Vec3F& eye, const Vec3F& lookAt, const Vec3F& up)
+Mat4F Mat4F::ShadowProjectionMat4F(const float& angleOfView, const float& near, const float& far)
 {
-	Vec3F _z = (eye - lookAt);
-	_z.normalize();
-	Vec3F _x = up^_z;
-	_x.normalize();
-	Vec3F _y = _z^_x;
-	_y.normalize();
+	float S = 1 / tan((angleOfView / 2) * (M_PI / 180));
 
-	return Mat4F(
-		_x.x, _x.y, _x.z, -(eye.x * _x.x + eye.y * _x.y + eye.z * _x.z),
-		_y.x, _y.y, _y.z, -(eye.x * _y.x + eye.y * _y.y + eye.z * _y.z),
-		_z.x, _z.y, _z.z, -(eye.x * _z.x + eye.y * _z.y + eye.z * _z.z),
-		0.0f, 0.0f, 0.0f, 1.0f);
+	return Mat4F::Mat4F(S, 0, 0, 0,
+		0, S, 0, 0,
+		0, 0, -(far / (far - near)), -1,
+		0, 0, -(far * near) / (far - near), 0);
 }
 
 Mat4F Mat4F::projectionMat4F(const float& angleOfView, const float& near, const float& far)
 {
 	float S = 1 / tan((angleOfView / 2) * (M_PI / 180));
 
-	return Mat4F::Mat4F(S,0,0,0,
-						0,S,0,0,
+	return Mat4F::Mat4F(S, 0, 0, 0,
+						0,(S*16)/9,0,0,
 						0,0,- (far / (far-near)), -1,
 						0,0,- (far * near) / (far - near), 0);
-}
-
-Mat4F Mat4F::orthographicMat4F(const float& left, const float& right, const float& bottom, const float& top, const float& near, const float& far)
-{
-	return Mat4F::Mat4F(2.0f / (right - left), 0, 0, -(right + left) / (right - left),
-		0, 2.0f / (top - bottom), 0, -(top + bottom) / (top - bottom),
-		0, 0, -2.0f / (far - near), -(far + near) / (far - near),
-		0, 0, 0, 1);
 }
 
 Mat4F Mat4F::lookat(const Vec3F& from, const Vec3F& to, const Vec3F& up)
@@ -354,13 +338,6 @@ Mat4F Mat4F::lookat(const Vec3F& from, const Vec3F& to, const Vec3F& up)
 				forward.x,	forward.y,   forward.z,  -(forward * from),
 					0,		   0,			0,		    	1
 	);
-
-	/*return Mat4F(
-		right.x, newup.x, forward.x, 0,
-		right.y, newup.y, forward.y, 0,
-		right.z, newup.z, forward.z, 0,
-		-(right * from), -(newup * from), -(forward * from), 1
-	);*/
 }
 
 ostream& operator<<(ostream& output, const Mat4F& mat4f)
