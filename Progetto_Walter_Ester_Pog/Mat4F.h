@@ -32,17 +32,16 @@ public:
 	Vec4F col(int)const;							//Ritrona la j-esima colonna
 	Mat4F transpose(const Mat4F&);					//Traspone la matrice
 	Mat4F inverse(const Mat4F&);					//Inverte la matrice
-	Mat4F translation(Mat4F, float, float, float);	//Trasla la matrice
-	Mat4F scaling(Mat4F,float);						//Scala la matrice
+	Mat4F translation(Mat4F&&, float, float, float);	//Trasla la matrice
+	Mat4F scaling(Mat4F&&,float);						//Scala la matrice
 	Mat4F rotationX(Mat4F,float);					//Ruota il piano Y.Z con X fisso
 	Mat4F rotationY(Mat4F,float);					//Ruota il piano X.Z con Y fisso
 	Mat4F rotationZ(Mat4F,float);					//Ruota il piano X.Y con Z fisso
-	Mat4F rotateAllAxis(const Mat4F& model, float angle, const Vec3F& axis);
+	Mat4F rotateAllAxis(Mat4F&& model, float angle, Vec3F&& axis);
 
 	Mat4F viewMat4F(const Vec3F&,const Vec3F&,const Vec3F&);		  //Matrice di passaggio da world space a view space
 	Mat4F projectionMat4F(const float&, const float&, const float&);  //Matrice per passaggio da view space a clip space
-	Mat4F ShadowProjectionMat4F(const float& angleOfView, const float& near, const float& far);
-	Mat4F lookat(const Vec3F&, const Vec3F&, const Vec3F&);
+	Mat4F lookat(Vec3F&&, Vec3F&&, Vec3F&&);
 	
 
 };

@@ -32,18 +32,18 @@ float lastFrame = 0.0f; //Tempo dell'ultimo frame
 Vec3F lightPos(5.0f, 2.0f, 0.0f);
 
 //rappresentano le scale degli oggetti di scena
-float scala1 = 0.008f;
-float scala2 = 0.01f;
-float scala3 = 0.4f;
-float scala4 = 0.03f;
+const float scala1 = 0.008f;
+const float scala2 = 0.01f;
+const float scala3 = 0.4f;
+const float scala4 = 0.03f;
 
 //rappresenta il centro del world space per gli oggetti di scena 
-Vec3F traslatore = Vec3F(0, 0, 0);
+const Vec3F traslatore = Vec3F(0, 0, 0);
 
 //rappresentano le rotazioni nei vari assi per gli oggetti di scena 
-Vec3F rotatore1 = Vec3F(1, 0, 0);
-Vec3F rotatore2 = Vec3F(0, 1, 0);
-Vec3F rotatore3 = Vec3F(0, 0, 1);
+const Vec3F rotatore1 = Vec3F(1, 0, 0);
+const Vec3F rotatore2 = Vec3F(0, 1, 0);
+const Vec3F rotatore3 = Vec3F(0, 0, 1);
 
 class View_Class
 {
@@ -131,15 +131,15 @@ public:
 			// Crea la Shadow CubeMap tramite la matrice di trasformazione
 	// -------------------------------------------------------------------------------------------------------------------------
 			float far_plane = 200.0f;
-			Mat4F shadowProj = shadowProj.ShadowProjectionMat4F(90.0f, (float)SHADOW_WIDTH / SHADOW_HEIGHT, far_plane);
+			Mat4F shadowProj = shadowProj.projectionMat4F(90.0f, (float)SHADOW_WIDTH / SHADOW_HEIGHT, far_plane);
 			vector<Mat4F> shadowTransforms;
 
-			shadowTransforms.push_back(shadowProj * matriceConti.lookat(lightPos, lightPos + Vec3F(1.0f, 0.0f, 0.0f), Vec3F(0.0f, -1.0f, 0.0f)));
-			shadowTransforms.push_back(shadowProj * matriceConti.lookat(lightPos, lightPos + Vec3F(-1.0f, 0.0f, 0.0f), Vec3F(0.0f, -1.0f, 0.0f)));
-			shadowTransforms.push_back(shadowProj * matriceConti.lookat(lightPos, lightPos + Vec3F(0.0f, 1.0f, 0.0f), Vec3F(0.0f, 0.0f, 1.0f)));
-			shadowTransforms.push_back(shadowProj * matriceConti.lookat(lightPos, lightPos + Vec3F(0.0f, -1.0f, 0.0f), Vec3F(0.0f, 0.0f, -1.0f)));
-			shadowTransforms.push_back(shadowProj * matriceConti.lookat(lightPos, lightPos + Vec3F(0.0f, 0.0f, 1.0f), Vec3F(0.0f, -1.0f, 0.0f)));
-			shadowTransforms.push_back(shadowProj * matriceConti.lookat(lightPos, lightPos + Vec3F(0.0f, 0.0f, -1.0f), Vec3F(0.0f, -1.0f, 0.0f)));
+			shadowTransforms.push_back(shadowProj * matriceConti.lookat(move(lightPos), lightPos + Vec3F(1.0f, 0.0f, 0.0f), Vec3F(0.0f, -1.0f, 0.0f)));
+			shadowTransforms.push_back(shadowProj * matriceConti.lookat(move(lightPos), lightPos + Vec3F(-1.0f, 0.0f, 0.0f), Vec3F(0.0f, -1.0f, 0.0f)));
+			shadowTransforms.push_back(shadowProj * matriceConti.lookat(move(lightPos), lightPos + Vec3F(0.0f, 1.0f, 0.0f), Vec3F(0.0f, 0.0f, 1.0f)));
+			shadowTransforms.push_back(shadowProj * matriceConti.lookat(move(lightPos), lightPos + Vec3F(0.0f, -1.0f, 0.0f), Vec3F(0.0f, 0.0f, -1.0f)));
+			shadowTransforms.push_back(shadowProj * matriceConti.lookat(move(lightPos), lightPos + Vec3F(0.0f, 0.0f, 1.0f), Vec3F(0.0f, -1.0f, 0.0f)));
+			shadowTransforms.push_back(shadowProj * matriceConti.lookat(move(lightPos), lightPos + Vec3F(0.0f, 0.0f, -1.0f), Vec3F(0.0f, -1.0f, 0.0f)));
 
 			// Renderizza la scena della CubeMap
 	// -------------------------------------------------------------------------------------------------------------------------
@@ -200,7 +200,7 @@ public:
 
 // Processa tutti gli input
 // ---------------------------------------------------------------------------------------------------------
-void processInput(GLFWwindow* window)
+inline void processInput(GLFWwindow* window)
 {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 	{
@@ -248,7 +248,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 
 // Ogni volta che muoviamo il mouse viene richiamata la funzione
 //----------------------------------------------------------------------------------------------
-void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
+inline void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
 {
 	float xpos = static_cast<float>(xposIn);
 	float ypos = static_cast<float>(yposIn);
@@ -271,14 +271,14 @@ void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
 
 // Ogni volta che usiamo la rotella del mouse viene richiamata la funzione
 //----------------------------------------------------------------------------------------------
-void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
+inline void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
 	camera.ProcessMouseScroll(static_cast<float>(yoffset));
 }
 
 // Funzione che renderizza i modelli di scena con i vari shader
 //----------------------------------------------------------------------------------------------
-void renderModel(Shader_Class& ourModelShader, Model_Class& ourModel, float scale, float angle, Vec3F rotatore, float xTrasl, float yTrasl, float zTrasl, Mat4F view, Mat4F projectionCamera)
+inline void renderModel(Shader_Class& ourModelShader, Model_Class& ourModel, float scale, float angle, Vec3F rotatore, float xTrasl, float yTrasl, float zTrasl, Mat4F view, Mat4F projectionCamera)
 {
 	Mat4F modelObject = Mat4F(1.0f);
 
@@ -286,9 +286,9 @@ void renderModel(Shader_Class& ourModelShader, Model_Class& ourModel, float scal
 	ourModelShader.setMat4("projection", projectionCamera);
 	ourModelShader.setMat4("view", view);
 
-	modelObject = modelObject.scaling(modelObject, scale);
-	modelObject = modelObject.translation(modelObject, xTrasl, yTrasl, zTrasl);
-	modelObject = modelObject.rotateAllAxis(modelObject, angle, rotatore);
+	modelObject = modelObject.scaling(move(modelObject), scale);
+	modelObject = modelObject.translation(move(modelObject), xTrasl, yTrasl, zTrasl);
+	modelObject = modelObject.rotateAllAxis(move(modelObject), angle, move(rotatore));
 
 	ourModelShader.setMat4("model", modelObject);
 

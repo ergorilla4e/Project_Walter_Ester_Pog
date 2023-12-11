@@ -36,10 +36,9 @@ int main()
 		return -1;
 	}
 
-	// Crea nella heap l'oggetto che esegue il programma, al termine libera la memoria occupata
+	// Crea nella heap l'oggetto che esegue il programma, al termine del main libera la memoria occupata automaticamente
 // -------------------------------------------------------------------------------------------------------------------------
-	View_Class *PlayView = new View_Class(window);
-	delete PlayView;
+	unique_ptr<View_Class> PlayView(new View_Class(window));
 
 // -------------------------------------------------------------------------------------------------------------------------
 	glfwTerminate();

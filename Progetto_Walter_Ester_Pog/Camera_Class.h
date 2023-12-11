@@ -58,11 +58,11 @@ public:
     Mat4F GetMatriceVisualizzazione()
     {
         Mat4F matrice = Mat4F();
-        return matrice.lookat(Posizione, Posizione + Fronte, Su);
+        return matrice.lookat(move(Posizione), move(Posizione + Fronte), move(Su));
     }
 
     // Elabora l'input ricevuto da tastiera. 
-    void ProcessKeyboard(Camera_Movement direzione, float deltaTime)
+    inline void ProcessKeyboard(Camera_Movement direzione, float deltaTime)
     {
         float velocita = VelocitaMovimento * deltaTime;
         if (direzione == AVANTI)
@@ -76,7 +76,7 @@ public:
     }
 
     // Elabora l'input ricevuto dal mouse.
-    void ProcessMouseMovement(float xoffset, float yoffset, bool limitaPitch = true)
+    inline void ProcessMouseMovement(float xoffset, float yoffset, bool limitaPitch = true)
     {
         xoffset *= SensibilitaMouse;
         yoffset *= SensibilitaMouse;
@@ -98,7 +98,7 @@ public:
     }
 
     // Elabora l'input ricevuto da un evento di scorrimento della rotella del mouse. 
-    void ProcessMouseScroll(float yoffset)
+    inline void ProcessMouseScroll(float yoffset)
     {
         Zoom -= (float)yoffset;
         if (Zoom < 1.0f)
@@ -109,7 +109,7 @@ public:
 
 private:
     // Calcola il vettore Fronte dalla nuova posizione degli angoli di Eulero della telecamera
-    void AggiornaVettoriTelecamera()
+    inline void AggiornaVettoriTelecamera()
     {
         // Calcola il nuovo vettore Fronte
         Vec3F fronte;

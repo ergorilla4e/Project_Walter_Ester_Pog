@@ -207,7 +207,7 @@ Mat4F Mat4F::inverse(const Mat4F& otherMat4f) //Utiliziamo il metodo di inversio
 		, a[28], a[29], a[30], a[31]);
 }
 
-Mat4F Mat4F::translation(Mat4F m, float a, float b, float c)
+Mat4F Mat4F::translation(Mat4F&& m, float a, float b, float c)
 {
 
 	Mat4F trasl = Mat4F(1,0,0,a,
@@ -220,7 +220,7 @@ Mat4F Mat4F::translation(Mat4F m, float a, float b, float c)
 	return calc;
 }
 
-Mat4F Mat4F::scaling(Mat4F m, float scale)
+Mat4F Mat4F::scaling(Mat4F&& m, float scale)
 {
 	Mat4F scal = Mat4F(scale, 0, 0, 0,
 						0, scale, 0, 0,
@@ -278,7 +278,7 @@ Mat4F Mat4F::rotationZ(Mat4F m,float deg)
 }
 
 
-Mat4F Mat4F::rotateAllAxis(const Mat4F& model, float angle, const Vec3F& axis) {
+Mat4F Mat4F::rotateAllAxis(Mat4F&& model, float angle, Vec3F&& axis) {
 	float radians = toRad(angle);
 	float cosA = cos(radians);
 	float sinA = sin(radians);
@@ -306,27 +306,17 @@ Mat4F Mat4F::rotateAllAxis(const Mat4F& model, float angle, const Vec3F& axis) {
 	return result;
 }
 
-Mat4F Mat4F::ShadowProjectionMat4F(const float& angleOfView, const float& near, const float& far)
-{
-	float S = 1 / tan((angleOfView / 2) * (M_PI / 180));
-
-	return Mat4F::Mat4F(S, 0, 0, 0,
-		0, S, 0, 0,
-		0, 0, -(far / (far - near)), -1,
-		0, 0, -(far * near) / (far - near), 0);
-}
-
 Mat4F Mat4F::projectionMat4F(const float& angleOfView, const float& near, const float& far)
 {
 	float S = 1 / tan((angleOfView / 2) * (M_PI / 180));
 
 	return Mat4F::Mat4F(S, 0, 0, 0,
-						0,(S*16)/9,0,0,
+						0,S*near,0,0,
 						0,0,- (far / (far-near)), -1,
 						0,0,- (far * near) / (far - near), 0);
 }
 
-Mat4F Mat4F::lookat(const Vec3F& from, const Vec3F& to, const Vec3F& up)
+Mat4F Mat4F::lookat(Vec3F&& from,Vec3F&& to,Vec3F&& up)
 {
 	Vec3F forward = (from - to).normalize();
 	Vec3F right = (up ^ forward).normalize();
