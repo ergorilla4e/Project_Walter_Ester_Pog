@@ -63,14 +63,14 @@ public:
 		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_CULL_FACE);
 
-		Shader_Class ourModelShader("Model_VS.vs", "Model_FS.fs");
-		Shader_Class depthShader("point_shadow_depth.vs", "point_shadow_depth.fs", "point_shadow_depth.gs");
+		unique_ptr<Shader_Class> ourModelShader(new Shader_Class("Model_VS.vs", "Model_FS.fs"));
+		unique_ptr<Shader_Class> depthShader(new Shader_Class("point_shadow_depth.vs", "point_shadow_depth.fs", "point_shadow_depth.gs"));
 
-		Model_Class ourModel("C:/Modelli/Map/MuseoMod.obj");
-		Model_Class alienModel("C:/Modelli/Map2/Alien/Reptile Alien Creature.obj");
-		Model_Class saturn("C:/Modelli/Map2/Saturn/Stylized_Planets.obj");
-		Model_Class dog("C:/Modelli/Map2/Dog/Doguinho.obj");
-		Model_Class skull("C:/Modelli/Map2/Skull/animal_skull_statuete.obj");
+		unique_ptr<Model_Class> ourModel(new Model_Class("C:/Modelli/Map/MuseoMod.obj"));
+		unique_ptr<Model_Class> alienModel(new Model_Class("C:/Modelli/Map2/Alien/Reptile Alien Creature.obj"));
+		unique_ptr<Model_Class> saturn(new Model_Class("C:/Modelli/Map2/Saturn/Stylized_Planets.obj"));
+		unique_ptr<Model_Class> dog(new Model_Class("C:/Modelli/Map2/Dog/Doguinho.obj"));
+		unique_ptr<Model_Class> skull(new Model_Class("C:/Modelli/Map2/Skull/animal_skull_statuete.obj"));
 
 		// Configurazione del FBO della mappa delle ombre 
 	// -------------------------------------------------------------------------------------------------------------------------
@@ -102,7 +102,7 @@ public:
 
 			// Configurazione Matrici
 	// -------------------------------------------------------------------------------------------------------------------------
-		Mat4F matriceConti = Mat4F();
+		unique_ptr<Mat4F> matriceConti(new Mat4F());
 		Mat4F projectionCamera = Mat4F();
 		Mat4F view = Mat4F();
 
@@ -134,12 +134,12 @@ public:
 			Mat4F shadowProj = shadowProj.projectionMat4F(90.0f, (float)SHADOW_WIDTH / SHADOW_HEIGHT, far_plane);
 			vector<Mat4F> shadowTransforms;
 
-			shadowTransforms.push_back(shadowProj * matriceConti.lookat(move(lightPos), lightPos + Vec3F(1.0f, 0.0f, 0.0f), Vec3F(0.0f, -1.0f, 0.0f)));
-			shadowTransforms.push_back(shadowProj * matriceConti.lookat(move(lightPos), lightPos + Vec3F(-1.0f, 0.0f, 0.0f), Vec3F(0.0f, -1.0f, 0.0f)));
-			shadowTransforms.push_back(shadowProj * matriceConti.lookat(move(lightPos), lightPos + Vec3F(0.0f, 1.0f, 0.0f), Vec3F(0.0f, 0.0f, 1.0f)));
-			shadowTransforms.push_back(shadowProj * matriceConti.lookat(move(lightPos), lightPos + Vec3F(0.0f, -1.0f, 0.0f), Vec3F(0.0f, 0.0f, -1.0f)));
-			shadowTransforms.push_back(shadowProj * matriceConti.lookat(move(lightPos), lightPos + Vec3F(0.0f, 0.0f, 1.0f), Vec3F(0.0f, -1.0f, 0.0f)));
-			shadowTransforms.push_back(shadowProj * matriceConti.lookat(move(lightPos), lightPos + Vec3F(0.0f, 0.0f, -1.0f), Vec3F(0.0f, -1.0f, 0.0f)));
+			shadowTransforms.push_back(shadowProj * matriceConti->lookat(move(lightPos), lightPos + Vec3F(1.0f, 0.0f, 0.0f), Vec3F(0.0f, -1.0f, 0.0f)));
+			shadowTransforms.push_back(shadowProj * matriceConti->lookat(move(lightPos), lightPos + Vec3F(-1.0f, 0.0f, 0.0f), Vec3F(0.0f, -1.0f, 0.0f)));
+			shadowTransforms.push_back(shadowProj * matriceConti->lookat(move(lightPos), lightPos + Vec3F(0.0f, 1.0f, 0.0f), Vec3F(0.0f, 0.0f, 1.0f)));
+			shadowTransforms.push_back(shadowProj * matriceConti->lookat(move(lightPos), lightPos + Vec3F(0.0f, -1.0f, 0.0f), Vec3F(0.0f, 0.0f, -1.0f)));
+			shadowTransforms.push_back(shadowProj * matriceConti->lookat(move(lightPos), lightPos + Vec3F(0.0f, 0.0f, 1.0f), Vec3F(0.0f, -1.0f, 0.0f)));
+			shadowTransforms.push_back(shadowProj * matriceConti->lookat(move(lightPos), lightPos + Vec3F(0.0f, 0.0f, -1.0f), Vec3F(0.0f, -1.0f, 0.0f)));
 
 			// Renderizza la scena della CubeMap
 	// -------------------------------------------------------------------------------------------------------------------------
@@ -147,19 +147,19 @@ public:
 			glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
 			glClear(GL_DEPTH_BUFFER_BIT);
 
-			depthShader.use();
+			depthShader->use();
 
 			for (unsigned int i = 0; i < 6; ++i)
-				depthShader.setMat4("shadowMatrices[" + to_string(i) + "]", shadowTransforms[i]);
+				depthShader->setMat4("shadowMatrices[" + to_string(i) + "]", shadowTransforms[i]);
 
-			depthShader.setFloat("far_plane", far_plane);
-			depthShader.setVec3("lightPos", lightPos);
+			depthShader->setFloat("far_plane", far_plane);
+			depthShader->setVec3("lightPos", lightPos);
 
-			renderModel(depthShader, ourModel, scala1, 0, rotatore1, traslatore.x + 0 / scala1, traslatore.y + 0 / scala1, traslatore.z + 0 / scala1, view, projectionCamera);
-			renderModel(depthShader, alienModel, scala2, 180, rotatore2, traslatore.x + (-4 / scala2), traslatore.y + (0 / scala2), traslatore.z + (7.5 / scala2), view, projectionCamera);
-			renderModel(depthShader, saturn, scala3, 16, rotatore3, traslatore.x + (-4.45 / scala3), traslatore.y + (1.1 / scala3), traslatore.z + (-1.25 / scala3), view, projectionCamera);
-			renderModel(depthShader, dog, scala3, 0, rotatore1, traslatore.x + (8 / scala3), traslatore.y + (0 / scala3), traslatore.z + (-8 / scala3), view, projectionCamera);
-			renderModel(depthShader, skull, scala4, -90, rotatore2, traslatore.x + (8.95 / scala4), traslatore.y + (0.7 / scala4), traslatore.z + (-1.2 / scala4), view, projectionCamera);
+			renderModel(*depthShader, *ourModel, scala1, 0, rotatore1, traslatore.x + 0 / scala1, traslatore.y + 0 / scala1, traslatore.z + 0 / scala1, view, projectionCamera);
+			renderModel(*depthShader, *alienModel, scala2, 180, rotatore2, traslatore.x + (-4 / scala2), traslatore.y + (0 / scala2), traslatore.z + (7.5 / scala2), view, projectionCamera);
+			renderModel(*depthShader, *saturn, scala3, 16, rotatore3, traslatore.x + (-4.45 / scala3), traslatore.y + (1.1 / scala3), traslatore.z + (-1.25 / scala3), view, projectionCamera);
+			renderModel(*depthShader, *dog, scala3, 0, rotatore1, traslatore.x + (8 / scala3), traslatore.y + (0 / scala3), traslatore.z + (-8 / scala3), view, projectionCamera);
+			renderModel(*depthShader, *skull, scala4, -90, rotatore2, traslatore.x + (8.95 / scala4), traslatore.y + (0.7 / scala4), traslatore.z + (-1.2 / scala4), view, projectionCamera);
 
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
@@ -168,27 +168,27 @@ public:
 			glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-			ourModelShader.use();
+			ourModelShader->use();
 
 			projectionCamera = projectionCamera.projectionMat4F(camera.Zoom, (float)SCR_WIDTH / SCR_HEIGHT, 100.0f);
 			Mat4F view = camera.GetMatriceVisualizzazione();
 
-			ourModelShader.setMat4("projection", projectionCamera);
-			ourModelShader.setMat4("view", view);
+			ourModelShader->setMat4("projection", projectionCamera);
+			ourModelShader->setMat4("view", view);
 			// Settiamo la luce
-			ourModelShader.setVec3("lightPos", lightPos);
-			ourModelShader.setVec3("viewPos", camera.Posizione);
-			ourModelShader.setInt("shadows", shadows); // Abilitiamo/Disabilitiamo le ombre 
-			ourModelShader.setFloat("far_plane", far_plane);
+			ourModelShader->setVec3("lightPos", lightPos);
+			ourModelShader->setVec3("viewPos", camera.Posizione);
+			ourModelShader->setInt("shadows", shadows); // Abilitiamo/Disabilitiamo le ombre 
+			ourModelShader->setFloat("far_plane", far_plane);
 
 			glActiveTexture(GL_TEXTURE1);
 			glBindTexture(GL_TEXTURE_CUBE_MAP, depthCubemap);
-
-			renderModel(ourModelShader, ourModel, scala1, 0, rotatore1, traslatore.x + 0 / scala1, traslatore.y + 0 / scala1, traslatore.z + 0 / scala1, view, projectionCamera);
-			renderModel(ourModelShader, alienModel, scala2, 180, rotatore2, traslatore.x + (-4 / scala2), traslatore.y + (0 / scala2), traslatore.z + (7.5 / scala2), view, projectionCamera);
-			renderModel(ourModelShader, saturn, scala3, 16, rotatore3, traslatore.x + (-4.45 / scala3), traslatore.y + (1.1 / scala3), traslatore.z + (-1.25 / scala3), view, projectionCamera);
-			renderModel(ourModelShader, dog, scala3, 0, rotatore1, traslatore.x + (8 / scala3), traslatore.y + (0 / scala3), traslatore.z + (-8 / scala3), view, projectionCamera);
-			renderModel(ourModelShader, skull, scala4, -90, rotatore2, traslatore.x + (8.95 / scala4), traslatore.y + (0.7 / scala4), traslatore.z + (-1.2 / scala4), view, projectionCamera);
+			
+			renderModel(*ourModelShader, *ourModel, scala1, 0, rotatore1, traslatore.x + 0 / scala1, traslatore.y + 0 / scala1, traslatore.z + 0 / scala1, view, projectionCamera);
+			renderModel(*ourModelShader, *alienModel, scala2, 180, rotatore2, traslatore.x + (-4 / scala2), traslatore.y + (0 / scala2), traslatore.z + (7.5 / scala2), view, projectionCamera);
+			renderModel(*ourModelShader, *saturn, scala3, 16, rotatore3, traslatore.x + (-4.45 / scala3), traslatore.y + (1.1 / scala3), traslatore.z + (-1.25 / scala3), view, projectionCamera);
+			renderModel(*ourModelShader, *dog, scala3, 0, rotatore1, traslatore.x + (8 / scala3), traslatore.y + (0 / scala3), traslatore.z + (-8 / scala3), view, projectionCamera);
+			renderModel(*ourModelShader, *skull, scala4, -90, rotatore2, traslatore.x + (8.95 / scala4), traslatore.y + (0.7 / scala4), traslatore.z + (-1.2 / scala4), view, projectionCamera);
 
 			// scambia i buffer e gestisce i vari eventi di input 
 	// -------------------------------------------------------------------------------------------------------------------------
