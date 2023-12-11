@@ -31,10 +31,6 @@ using namespace std;
 #include <GLAD/glad.h>
 #include <GLFW/glfw3.h>
 #include <GLFW/glfw3native.h>
-#include <RAPIDXML/rapidxml.hpp>
-#include <RAPIDXML/rapidxml_iterators.hpp>
-#include <RAPIDXML/rapidxml_print.hpp>
-#include <RAPIDXML/rapidxml_utils.hpp>
 #include "stb_image.h"
 
 #endif
