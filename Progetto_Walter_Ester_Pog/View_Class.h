@@ -62,6 +62,7 @@ public:
 
 		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_CULL_FACE);
+		glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST);
 
 		unique_ptr<Shader_Class> ourModelShader(new Shader_Class("Model_VS.vs", "Model_FS.fs"));
 		unique_ptr<Shader_Class> depthShader(new Shader_Class("point_shadow_depth.vs", "point_shadow_depth.fs", "point_shadow_depth.gs"));
@@ -151,6 +152,8 @@ public:
 
 			for (unsigned int i = 0; i < 6; ++i)
 				depthShader->setMat4("shadowMatrices[" + to_string(i) + "]", shadowTransforms[i]);
+
+			shadowTransforms.clear();
 
 			depthShader->setFloat("far_plane", far_plane);
 			depthShader->setVec3("lightPos", lightPos);
