@@ -198,6 +198,7 @@ public:
 			glfwSwapBuffers(window);
 			glfwPollEvents();
 		}
+		glDeleteFramebuffers(1, &depthMapFBO);
     };
 };
 
