@@ -10,7 +10,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void processInput(GLFWwindow* window);
-void renderModel(Shader_Class& ourModelShader, Model_Class& ourModel, float scale, float angle, Vec3F rotatore, float xTrasl, float yTrasl, float zTrasl, Mat4F view, Mat4F projectionCamera);
+void renderModel(Shader_Class& ourModelShader, Model_Class& ourModel, float scale, float angle, Vec3F rotatore, float xTrasl, float yTrasl, float zTrasl);
 
 // Impostazioni
 const unsigned int SCR_WIDTH = 1920;
@@ -57,7 +57,6 @@ public:
 		glfwSetCursorPosCallback(window, mouse_callback);
 		glfwSetScrollCallback(window, scroll_callback);
 
-		// tell GLFW to capture our mouse
 		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 		glEnable(GL_DEPTH_TEST);
@@ -78,17 +77,17 @@ public:
 		const unsigned int SHADOW_WIDTH = 4096, SHADOW_HEIGHT = 4096;
 		unsigned int depthMapFBO;
 		
-		glCullFace(GL_FRONT);
+		//glCullFace(GL_FRONT);
 
 		glGenFramebuffers(1, &depthMapFBO);
-		// create depth cubemap texture
+		// Crea la texture di profondita' della cubemap
 		unsigned int depthCubemap;
 		glGenTextures(1, &depthCubemap);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, depthCubemap);
 		for (unsigned int i = 0; i < 6; ++i)
 			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_DEPTH_COMPONENT, SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
@@ -99,7 +98,7 @@ public:
 		glReadBuffer(GL_NONE);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-		glCullFace(GL_BACK);
+		//glCullFace(GL_BACK);
 
 			// Configurazione Matrici
 	// -------------------------------------------------------------------------------------------------------------------------
@@ -131,7 +130,7 @@ public:
 
 			// Crea la Shadow CubeMap tramite la matrice di trasformazione
 	// -------------------------------------------------------------------------------------------------------------------------
-			float far_plane = 200.0f;
+			float far_plane = 400.0f;
 			Mat4F shadowProj = shadowProj.projectionMat4F(90.0f, (float)SHADOW_WIDTH / SHADOW_HEIGHT, far_plane);
 			vector<Mat4F> shadowTransforms;
 
@@ -158,11 +157,20 @@ public:
 			depthShader->setFloat("far_plane", far_plane);
 			depthShader->setVec3("lightPos", lightPos);
 
-			renderModel(*depthShader, *ourModel, scala1, 0, rotatore1, traslatore.x + 0 / scala1, traslatore.y + 0 / scala1, traslatore.z + 0 / scala1, view, projectionCamera);
-			renderModel(*depthShader, *alienModel, scala2, 180, rotatore2, traslatore.x + (-4 / scala2), traslatore.y + (0 / scala2), traslatore.z + (7.5 / scala2), view, projectionCamera);
-			renderModel(*depthShader, *saturn, scala3, 16, rotatore3, traslatore.x + (-4.45 / scala3), traslatore.y + (1.1 / scala3), traslatore.z + (-1.25 / scala3), view, projectionCamera);
-			renderModel(*depthShader, *dog, scala3, 0, rotatore1, traslatore.x + (8 / scala3), traslatore.y + (0 / scala3), traslatore.z + (-8 / scala3), view, projectionCamera);
-			renderModel(*depthShader, *skull, scala4, -90, rotatore2, traslatore.x + (8.95 / scala4), traslatore.y + (0.7 / scala4), traslatore.z + (-1.2 / scala4), view, projectionCamera);
+			//glCullFace(GL_FRONT);
+
+			depthShader->setBool("reverse_normals", false);
+
+			renderModel(*depthShader, *ourModel, scala1, 0, rotatore1, traslatore.x + 0 / scala1, traslatore.y + 0 / scala1, traslatore.z + 0 / scala1);
+			
+			depthShader->setBool("reverse_normals", true);
+
+			renderModel(*depthShader, *alienModel, scala2, 180, rotatore2, traslatore.x + (-4 / scala2), traslatore.y + (0 / scala2), traslatore.z + (7.5 / scala2));
+			renderModel(*depthShader, *saturn, scala3, 16, rotatore3, traslatore.x + (-4.45 / scala3), traslatore.y + (1.1 / scala3), traslatore.z + (-1.25 / scala3));
+			renderModel(*depthShader, *dog, scala3, 0, rotatore1, traslatore.x + (8 / scala3), traslatore.y + (0 / scala3), traslatore.z + (-8 / scala3));
+			renderModel(*depthShader, *skull, scala4, -90, rotatore2, traslatore.x + (8.95 / scala4), traslatore.y + (0.7 / scala4), traslatore.z + (-1.2 / scala4));
+
+			//glCullFace(GL_BACK);
 
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
@@ -178,20 +186,21 @@ public:
 
 			ourModelShader->setMat4("projection", projectionCamera);
 			ourModelShader->setMat4("view", view);
+
 			// Settiamo la luce
+			ourModelShader->setFloat("far_plane", far_plane);
 			ourModelShader->setVec3("lightPos", lightPos);
 			ourModelShader->setVec3("viewPos", camera.Posizione);
-			ourModelShader->setInt("shadows", shadows); // Abilitiamo/Disabilitiamo le ombre 
-			ourModelShader->setFloat("far_plane", far_plane);
+			ourModelShader->setBool("shadows", shadows); // Abilitiamo/Disabilitiamo le ombre 
 
 			glActiveTexture(GL_TEXTURE1);
 			glBindTexture(GL_TEXTURE_CUBE_MAP, depthCubemap);
 			
-			renderModel(*ourModelShader, *ourModel, scala1, 0, rotatore1, traslatore.x + 0 / scala1, traslatore.y + 0 / scala1, traslatore.z + 0 / scala1, view, projectionCamera);
-			renderModel(*ourModelShader, *alienModel, scala2, 180, rotatore2, traslatore.x + (-4 / scala2), traslatore.y + (0 / scala2), traslatore.z + (7.5 / scala2), view, projectionCamera);
-			renderModel(*ourModelShader, *saturn, scala3, 16, rotatore3, traslatore.x + (-4.45 / scala3), traslatore.y + (1.1 / scala3), traslatore.z + (-1.25 / scala3), view, projectionCamera);
-			renderModel(*ourModelShader, *dog, scala3, 0, rotatore1, traslatore.x + (8 / scala3), traslatore.y + (0 / scala3), traslatore.z + (-8 / scala3), view, projectionCamera);
-			renderModel(*ourModelShader, *skull, scala4, -90, rotatore2, traslatore.x + (8.95 / scala4), traslatore.y + (0.7 / scala4), traslatore.z + (-1.2 / scala4), view, projectionCamera);
+			renderModel(*ourModelShader, *ourModel, scala1, 0, rotatore1, traslatore.x + 0 / scala1, traslatore.y + 0 / scala1, traslatore.z + 0 / scala1);
+			renderModel(*ourModelShader, *alienModel, scala2, 180, rotatore2, traslatore.x + (-4 / scala2), traslatore.y + (0 / scala2), traslatore.z + (7.5 / scala2));
+			renderModel(*ourModelShader, *saturn, scala3, 16, rotatore3, traslatore.x + (-4.45 / scala3), traslatore.y + (1.1 / scala3), traslatore.z + (-1.25 / scala3));
+			renderModel(*ourModelShader, *dog, scala3, 0, rotatore1, traslatore.x + (8 / scala3), traslatore.y + (0 / scala3), traslatore.z + (-8 / scala3));
+			renderModel(*ourModelShader, *skull, scala4, -90, rotatore2, traslatore.x + (8.95 / scala4), traslatore.y + (0.7 / scala4), traslatore.z + (-1.2 / scala4));
 
 			// scambia i buffer e gestisce i vari eventi di input 
 	// -------------------------------------------------------------------------------------------------------------------------
@@ -282,13 +291,9 @@ inline void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 
 // Funzione che renderizza i modelli di scena con i vari shader
 //----------------------------------------------------------------------------------------------
-inline void renderModel(Shader_Class& ourModelShader, Model_Class& ourModel, float scale, float angle, Vec3F rotatore, float xTrasl, float yTrasl, float zTrasl, Mat4F view, Mat4F projectionCamera)
+inline void renderModel(Shader_Class& ourModelShader, Model_Class& ourModel, float scale, float angle, Vec3F rotatore, float xTrasl, float yTrasl, float zTrasl)
 {
 	Mat4F modelObject = Mat4F(1.0f);
-
-	ourModelShader.use();
-	ourModelShader.setMat4("projection", projectionCamera);
-	ourModelShader.setMat4("view", view);
 
 	modelObject = modelObject.scaling(move(modelObject), scale);
 	modelObject = modelObject.translation(move(modelObject), xTrasl, yTrasl, zTrasl);
@@ -306,7 +311,7 @@ inline void renderModel(Shader_Class& ourModelShader, Model_Class& ourModel, flo
 	ourModelShader.setVec3("pointLights.specular", 1.0f, 1.0f, 1.0f);
 	ourModelShader.setFloat("pointLights.constant", 1.0f);
 	ourModelShader.setFloat("pointLights.linear", 0.04f);
-	ourModelShader.setFloat("pointLights.quadratic", 0.01f);
+	ourModelShader.setFloat("pointLights.quadratic", 0.02f);
 	
 
 	ourModel.Draw(ourModelShader);
