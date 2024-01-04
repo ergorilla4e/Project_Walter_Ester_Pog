@@ -17,10 +17,7 @@ void main()
 {
     FragPos = vec4(model * vec4(aPos, 1.0));
 
-    if(reverse_normals) 
-        Normal = transpose(inverse(mat3(model))) * (-1.0 * aNormal);
-    else
-        Normal = transpose(inverse(mat3(model))) * aNormal;
+    Normal = transpose(inverse(mat3(model))) * aNormal;
     
     TexCoords = aTexCoords;
 

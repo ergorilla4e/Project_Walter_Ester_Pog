@@ -159,12 +159,7 @@ public:
 
 			//glCullFace(GL_FRONT);
 
-			depthShader->setBool("reverse_normals", false);
-
 			renderModel(*depthShader, *ourModel, scala1, 0, rotatore1, traslatore.x + 0 / scala1, traslatore.y + 0 / scala1, traslatore.z + 0 / scala1);
-			
-			depthShader->setBool("reverse_normals", true);
-
 			renderModel(*depthShader, *alienModel, scala2, 180, rotatore2, traslatore.x + (-4 / scala2), traslatore.y + (0 / scala2), traslatore.z + (7.5 / scala2));
 			renderModel(*depthShader, *saturn, scala3, 16, rotatore3, traslatore.x + (-4.45 / scala3), traslatore.y + (1.1 / scala3), traslatore.z + (-1.25 / scala3));
 			renderModel(*depthShader, *dog, scala3, 0, rotatore1, traslatore.x + (8 / scala3), traslatore.y + (0 / scala3), traslatore.z + (-8 / scala3));
