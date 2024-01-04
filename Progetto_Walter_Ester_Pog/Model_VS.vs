@@ -11,8 +11,6 @@ uniform mat4 projection;
 uniform mat4 view;
 uniform mat4 model;
 
-uniform bool reverse_normals;
-
 void main()
 {
     FragPos = vec4(model * vec4(aPos, 1.0));
