@@ -101,5 +101,7 @@ void main()
     
     result += CalcPointLightBlinn(pointLights, norm, fragPosNorm, viewDir, shadow);
     
+    result = result / sqrt(result + vec3(1.0));
+
     FragColor = vec4(result, 1.0);
 };
